@@ -16,19 +16,19 @@
  */
 package io.zeebe.util.sched.channel;
 
+import static org.agrona.UnsafeAccess.UNSAFE;
+
 import io.zeebe.util.sched.ActorCondition;
 import io.zeebe.util.sched.ActorJob;
 import io.zeebe.util.sched.ActorSubscription;
 import io.zeebe.util.sched.ActorTask;
-
-import static org.agrona.UnsafeAccess.UNSAFE;
 
 @SuppressWarnings("restriction")
 public class ChannelConsumerCondition
     implements ActorCondition, ActorSubscription, ChannelSubscription {
   private static final long TRIGGER_COUNT_OFFSET;
 
-    private final long triggerCount = 0;
+  private final long triggerCount = 0;
   private long processedTiggersCount = 0;
 
   private final ConsumableChannel channel;
@@ -44,15 +44,15 @@ public class ChannelConsumerCondition
     }
   }
 
-    public ChannelConsumerCondition(final ActorJob job, final ConsumableChannel channel) {
+  public ChannelConsumerCondition(final ActorJob job, final ConsumableChannel channel) {
     this.job = job;
-        task = job.getTask();
+    task = job.getTask();
     this.channel = channel;
   }
 
   @Override
   public boolean poll() {
-      final long polledCount = triggerCount;
+    final long polledCount = triggerCount;
     final boolean hasAvailable = channel.hasAvailable();
     return polledCount > processedTiggersCount || hasAvailable;
   }
@@ -65,7 +65,7 @@ public class ChannelConsumerCondition
 
   @Override
   public void onJobCompleted() {
-      processedTiggersCount++;
+    processedTiggersCount++;
   }
 
   @Override

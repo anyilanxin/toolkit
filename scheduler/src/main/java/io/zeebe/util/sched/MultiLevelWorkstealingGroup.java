@@ -23,18 +23,18 @@ package io.zeebe.util.sched;
 public class MultiLevelWorkstealingGroup {
   private final WorkStealingGroup[] workStealingGroups;
 
-    public MultiLevelWorkstealingGroup(final int numOfThreads, final int levels) {
+  public MultiLevelWorkstealingGroup(final int numOfThreads, final int levels) {
     workStealingGroups = new WorkStealingGroup[levels];
     for (int i = 0; i < levels; i++) {
       workStealingGroups[i] = new WorkStealingGroup(numOfThreads);
     }
   }
 
-    public ActorTask getNextTask(final int level) {
+  public ActorTask getNextTask(final int level) {
     return workStealingGroups[level].getNextTask();
   }
 
-    public void submit(final ActorTask task, final int level, final int threadId) {
+  public void submit(final ActorTask task, final int level, final int threadId) {
     workStealingGroups[level].submit(task, threadId);
   }
 }

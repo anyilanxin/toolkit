@@ -18,7 +18,6 @@ package io.zeebe.msgpack.value;
 
 import io.zeebe.msgpack.spec.MsgPackReader;
 import io.zeebe.msgpack.spec.MsgPackWriter;
-
 import java.util.Objects;
 
 public class EnumValue<E extends Enum<E>> extends BaseValue {
@@ -29,7 +28,7 @@ public class EnumValue<E extends Enum<E>> extends BaseValue {
 
   private E value;
 
-    public EnumValue(final Class<E> e, final E defaultValue) {
+  public EnumValue(final Class<E> e, final E defaultValue) {
     enumConstants = e.getEnumConstants();
     binaryEnumValues = new StringValue[enumConstants.length];
 
@@ -38,10 +37,10 @@ public class EnumValue<E extends Enum<E>> extends BaseValue {
       binaryEnumValues[i] = new StringValue(constant.toString());
     }
 
-        value = defaultValue;
+    value = defaultValue;
   }
 
-    public EnumValue(final Class<E> e) {
+  public EnumValue(final Class<E> e) {
     this(e, null);
   }
 
@@ -49,8 +48,8 @@ public class EnumValue<E extends Enum<E>> extends BaseValue {
     return value;
   }
 
-    public void setValue(final E val) {
-        value = val;
+  public void setValue(final E val) {
+    value = val;
   }
 
   @Override

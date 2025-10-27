@@ -30,7 +30,7 @@ public enum MsgPackType {
 
   protected boolean isScalar;
 
-    MsgPackType(final boolean isScalar) {
+  MsgPackType(final boolean isScalar) {
     this.isScalar = isScalar;
   }
 

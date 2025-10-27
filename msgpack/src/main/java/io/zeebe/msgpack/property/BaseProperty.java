@@ -22,7 +22,6 @@ import io.zeebe.msgpack.spec.MsgPackReader;
 import io.zeebe.msgpack.spec.MsgPackWriter;
 import io.zeebe.msgpack.value.BaseValue;
 import io.zeebe.msgpack.value.StringValue;
-
 import java.util.Objects;
 
 public abstract class BaseProperty<T extends BaseValue> implements Recyclable {
@@ -31,31 +30,31 @@ public abstract class BaseProperty<T extends BaseValue> implements Recyclable {
   protected T defaultValue;
   protected boolean isSet;
 
-    public BaseProperty(final T value) {
+  public BaseProperty(final T value) {
     this(StringValue.EMPTY_STRING, value);
   }
 
-    public BaseProperty(final String keyString, final T value) {
+  public BaseProperty(final String keyString, final T value) {
     this(keyString, value, null);
   }
 
-    public BaseProperty(final String keyString, final T value, final T defaultValue) {
+  public BaseProperty(final String keyString, final T value, final T defaultValue) {
     Objects.requireNonNull(keyString);
     Objects.requireNonNull(value);
 
-        key = new StringValue(keyString);
+    key = new StringValue(keyString);
     this.value = value;
     this.defaultValue = defaultValue;
   }
 
   public void set() {
-      isSet = true;
+    isSet = true;
   }
 
   @Override
   public void reset() {
-      isSet = false;
-      value.reset();
+    isSet = false;
+    value.reset();
   }
 
   public boolean hasValue() {
@@ -81,12 +80,12 @@ public abstract class BaseProperty<T extends BaseValue> implements Recyclable {
     return key.getEncodedLength() + resolveValue().getEncodedLength();
   }
 
-    public void read(final MsgPackReader reader) {
+  public void read(final MsgPackReader reader) {
     value.read(reader);
     set();
   }
 
-    public void write(final MsgPackWriter writer) {
+  public void write(final MsgPackWriter writer) {
     T valueToWrite = value;
     if (!isSet) {
       valueToWrite = defaultValue;
@@ -101,7 +100,7 @@ public abstract class BaseProperty<T extends BaseValue> implements Recyclable {
     valueToWrite.write(writer);
   }
 
-    public void writeJSON(final StringBuilder sb) {
+  public void writeJSON(final StringBuilder sb) {
     key.writeJSON(sb);
     sb.append(":");
     if (hasValue()) {

@@ -20,7 +20,6 @@ import io.zeebe.msgpack.property.BaseProperty;
 import io.zeebe.msgpack.property.UndeclaredProperty;
 import io.zeebe.msgpack.spec.MsgPackReader;
 import io.zeebe.msgpack.spec.MsgPackWriter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +31,7 @@ public class ObjectValue extends BaseValue {
 
   private final StringValue decodedKey = new StringValue();
 
-    public ObjectValue declareProperty(final BaseProperty<? extends BaseValue> prop) {
+  public ObjectValue declareProperty(final BaseProperty<? extends BaseValue> prop) {
     declaredProperties.add(prop);
     return this;
   }
@@ -51,7 +50,7 @@ public class ObjectValue extends BaseValue {
     }
   }
 
-    private UndeclaredProperty newUndeclaredProperty(final StringValue key) {
+  private UndeclaredProperty newUndeclaredProperty(final StringValue key) {
     final int recycledSize = recycledProperties.size();
 
     UndeclaredProperty prop = null;
@@ -78,7 +77,8 @@ public class ObjectValue extends BaseValue {
     builder.append("}");
   }
 
-    protected <T extends BaseProperty<?>> void writeJson(final StringBuilder builder, final List<T> properties) {
+  protected <T extends BaseProperty<?>> void writeJson(
+      final StringBuilder builder, final List<T> properties) {
     for (int i = 0; i < properties.size(); i++) {
       if (i > 0) {
         builder.append(",");
@@ -147,7 +147,8 @@ public class ObjectValue extends BaseValue {
     write(writer, undeclaredProperties);
   }
 
-    protected <T extends BaseProperty<?>> void write(final MsgPackWriter writer, final List<T> properties) {
+  protected <T extends BaseProperty<?>> void write(
+      final MsgPackWriter writer, final List<T> properties) {
     for (int i = 0; i < properties.size(); ++i) {
       final BaseProperty<? extends BaseValue> prop = properties.get(i);
       prop.write(writer);
@@ -186,7 +187,7 @@ public class ObjectValue extends BaseValue {
     return Objects.hash(declaredProperties, undeclaredProperties, recycledProperties);
   }
 
-    protected <T extends BaseProperty<?>> int getEncodedLength(final List<T> properties) {
+  protected <T extends BaseProperty<?>> int getEncodedLength(final List<T> properties) {
     int length = 0;
     for (int i = 0; i < properties.size(); ++i) {
       final T prop = properties.get(i);

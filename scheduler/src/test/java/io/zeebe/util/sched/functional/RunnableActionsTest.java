@@ -127,7 +127,7 @@ public class RunnableActionsTest {
           if (actor.runs == 5) {
             ctr.done();
           } else {
-            ctr.yield();
+              ctr.handleYield();
           }
         };
 
@@ -155,7 +155,7 @@ public class RunnableActionsTest {
                 if (actor.runs == 5) {
                   ctr.done();
                 } else {
-                  ctr.yield();
+                    ctr.handleYield();
                 }
               }
             });

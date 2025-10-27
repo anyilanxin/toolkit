@@ -16,10 +16,10 @@
  */
 package io.zeebe.util;
 
+import static io.zeebe.util.ByteUnit.*;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static io.zeebe.util.ByteUnit.*;
 
 public class ByteValue {
   private static final Pattern PATTERN =
@@ -28,28 +28,28 @@ public class ByteValue {
   private final ByteUnit unit;
   private final long value;
 
-    public ByteValue(final long value, final ByteUnit unit) {
+  public ByteValue(final long value, final ByteUnit unit) {
     this.value = value;
     this.unit = unit;
   }
 
-    public static ByteValue ofBytes(final long value) {
+  public static ByteValue ofBytes(final long value) {
     return new ByteValue(value, ByteUnit.BYTES);
   }
 
-    public static ByteValue ofKilobytes(final long value) {
+  public static ByteValue ofKilobytes(final long value) {
     return new ByteValue(value, ByteUnit.KILOBYTES);
   }
 
-    public static ByteValue ofMegabytes(final long value) {
+  public static ByteValue ofMegabytes(final long value) {
     return new ByteValue(value, ByteUnit.MEGABYTES);
   }
 
-    public static ByteValue ofGigabytes(final long value) {
+  public static ByteValue ofGigabytes(final long value) {
     return new ByteValue(value, ByteUnit.GIGABYTES);
   }
 
-    public ByteValue(final String humanReadable) {
+  public ByteValue(final String humanReadable) {
     final Matcher matcher = PATTERN.matcher(humanReadable);
 
     if (!matcher.matches()) {

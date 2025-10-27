@@ -27,7 +27,7 @@ public class MappedFileAllocator implements BufferAllocator {
 
   private final File mappedFile;
 
-    public MappedFileAllocator(final File mappedFile) {
+  public MappedFileAllocator(final File mappedFile) {
     super();
     this.mappedFile = mappedFile;
   }

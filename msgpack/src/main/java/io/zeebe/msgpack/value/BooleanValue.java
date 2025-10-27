@@ -18,7 +18,6 @@ package io.zeebe.msgpack.value;
 
 import io.zeebe.msgpack.spec.MsgPackReader;
 import io.zeebe.msgpack.spec.MsgPackWriter;
-
 import java.util.Objects;
 
 public class BooleanValue extends BaseValue {
@@ -28,8 +27,8 @@ public class BooleanValue extends BaseValue {
     this(false);
   }
 
-    public BooleanValue(final boolean initialValue) {
-        val = initialValue;
+  public BooleanValue(final boolean initialValue) {
+    val = initialValue;
   }
 
   @Override
@@ -41,8 +40,8 @@ public class BooleanValue extends BaseValue {
     return val;
   }
 
-    public void setValue(final boolean value) {
-        val = value;
+  public void setValue(final boolean value) {
+    val = value;
   }
 
   @Override

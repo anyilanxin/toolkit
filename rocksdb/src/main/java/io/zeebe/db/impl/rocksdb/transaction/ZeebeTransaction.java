@@ -16,12 +16,12 @@
  */
 package io.zeebe.db.impl.rocksdb.transaction;
 
+import static io.zeebe.db.impl.rocksdb.transaction.RocksDbInternal.isRocksDbExceptionRecoverable;
+
 import io.zeebe.db.TransactionOperation;
 import io.zeebe.db.ZeebeDbException;
 import io.zeebe.db.ZeebeDbTransaction;
 import org.rocksdb.*;
-
-import static io.zeebe.db.impl.rocksdb.transaction.RocksDbInternal.isRocksDbExceptionRecoverable;
 
 public class ZeebeTransaction implements ZeebeDbTransaction, AutoCloseable {
 
@@ -29,7 +29,7 @@ public class ZeebeTransaction implements ZeebeDbTransaction, AutoCloseable {
   private final long nativeHandle;
   private boolean inCurrentTransaction;
 
-    public ZeebeTransaction(final Transaction transaction) {
+  public ZeebeTransaction(final Transaction transaction) {
     this.transaction = transaction;
     try {
       nativeHandle = RocksDbInternal.nativeHandle.getLong(transaction);
@@ -38,25 +38,35 @@ public class ZeebeTransaction implements ZeebeDbTransaction, AutoCloseable {
     }
   }
 
-    public void put(final long columnFamilyHandle, final byte[] key, final int keyLength, final byte[] value, final int valueLength)
+  public void put(
+      final long columnFamilyHandle,
+      final byte[] key,
+      final int keyLength,
+      final byte[] value,
+      final int valueLength)
       throws Exception {
     RocksDbInternal.putWithHandle.invoke(
         transaction, nativeHandle, key, keyLength, value, valueLength, columnFamilyHandle, false);
   }
 
-    public byte[] get(final long columnFamilyHandle, final long readOptionsHandle, final byte[] key, final int keyLength)
+  public byte[] get(
+      final long columnFamilyHandle,
+      final long readOptionsHandle,
+      final byte[] key,
+      final int keyLength)
       throws Exception {
     return (byte[])
         RocksDbInternal.getWithHandle.invoke(
             transaction, nativeHandle, readOptionsHandle, key, keyLength, columnFamilyHandle);
   }
 
-    public void delete(final long columnFamilyHandle, final byte[] key, final int keyLength) throws Exception {
+  public void delete(final long columnFamilyHandle, final byte[] key, final int keyLength)
+      throws Exception {
     RocksDbInternal.removeWithHandle.invoke(
         transaction, nativeHandle, key, keyLength, columnFamilyHandle, false);
   }
 
-    public RocksIterator newIterator(final ReadOptions options, final ColumnFamilyHandle handle) {
+  public RocksIterator newIterator(final ReadOptions options, final ColumnFamilyHandle handle) {
     return transaction.getIterator(options, handle);
   }
 
@@ -117,7 +127,7 @@ public class ZeebeTransaction implements ZeebeDbTransaction, AutoCloseable {
     }
   }
 
-    @Override
+  @Override
   public void close() {
     transaction.close();
   }

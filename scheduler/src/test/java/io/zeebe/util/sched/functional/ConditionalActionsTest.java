@@ -16,19 +16,17 @@
  */
 package io.zeebe.util.sched.functional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import io.zeebe.util.sched.Actor;
 import io.zeebe.util.sched.ActorCondition;
 import io.zeebe.util.sched.testing.ControlledActorSchedulerRule;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 public class ConditionalActionsTest {
   @Rule public ControlledActorSchedulerRule scheduler = new ControlledActorSchedulerRule();
@@ -155,7 +153,7 @@ public class ConditionalActionsTest {
           protected void onCondition() {
             invocations.incrementAndGet();
             actor.run(this::doNothing);
-            actor.yield();
+              actor.handleYield();
           }
 
           protected void doNothing() {}

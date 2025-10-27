@@ -34,7 +34,7 @@ public class DirectBufferWriter implements BufferWriter {
     writeBuffer.putBytes(writeOffset, buffer, offset, length);
   }
 
-    public DirectBufferWriter wrap(final DirectBuffer buffer, final int offset, final int length) {
+  public DirectBufferWriter wrap(final DirectBuffer buffer, final int offset, final int length) {
     this.buffer = buffer;
     this.offset = offset;
     this.length = length;
@@ -42,7 +42,7 @@ public class DirectBufferWriter implements BufferWriter {
     return this;
   }
 
-    public DirectBufferWriter wrap(final DirectBuffer buffer) {
+  public DirectBufferWriter wrap(final DirectBuffer buffer) {
     return wrap(buffer, 0, buffer.capacity());
   }
 
@@ -52,7 +52,7 @@ public class DirectBufferWriter implements BufferWriter {
     length = 0;
   }
 
-    public static DirectBufferWriter writerFor(final DirectBuffer buffer) {
+  public static DirectBufferWriter writerFor(final DirectBuffer buffer) {
     return new DirectBufferWriter().wrap(buffer);
   }
 }

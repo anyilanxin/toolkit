@@ -19,11 +19,11 @@ package io.zeebe.msgpack.property;
 import io.zeebe.msgpack.value.LongValue;
 
 public class LongProperty extends BaseProperty<LongValue> {
-    public LongProperty(final String key) {
+  public LongProperty(final String key) {
     super(key, new LongValue());
   }
 
-    public LongProperty(final String key, final long defaultValue) {
+  public LongProperty(final String key, final long defaultValue) {
     super(key, new LongValue(), new LongValue(defaultValue));
   }
 
@@ -31,8 +31,8 @@ public class LongProperty extends BaseProperty<LongValue> {
     return resolveValue().getValue();
   }
 
-    public void setValue(final long value) {
+  public void setValue(final long value) {
     this.value.setValue(value);
-        isSet = true;
+    isSet = true;
   }
 }

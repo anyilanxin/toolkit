@@ -16,15 +16,14 @@
  */
 package io.zeebe.util.collection;
 
-import org.agrona.collections.IntArrayList;
-
 import java.util.NoSuchElementException;
+import org.agrona.collections.IntArrayList;
 
 public class IntArrayListIterator implements IntIterator {
   private IntArrayList list = null;
   private int cursor = 0;
 
-    public void wrap(final IntArrayList list) {
+  public void wrap(final IntArrayList list) {
     this.list = list;
     cursor = 0;
   }

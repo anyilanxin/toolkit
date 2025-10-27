@@ -18,7 +18,6 @@ package io.zeebe.msgpack.value;
 
 import io.zeebe.msgpack.spec.MsgPackReader;
 import io.zeebe.msgpack.spec.MsgPackWriter;
-
 import java.util.Objects;
 
 public class IntegerValue extends BaseValue {
@@ -28,12 +27,12 @@ public class IntegerValue extends BaseValue {
     this(0);
   }
 
-    public IntegerValue(final int initialValue) {
-        value = initialValue;
+  public IntegerValue(final int initialValue) {
+    value = initialValue;
   }
 
-    public void setValue(final int val) {
-        value = val;
+  public void setValue(final int val) {
+    value = val;
   }
 
   public int getValue() {

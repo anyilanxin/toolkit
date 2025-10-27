@@ -22,7 +22,7 @@ import static org.agrona.UnsafeAccess.UNSAFE;
 public class ActorConditionImpl implements ActorCondition, ActorSubscription {
   private static final long TRIGGER_COUNT_OFFSET;
 
-    private final long triggerCount = 0;
+  private final long triggerCount = 0;
   private long runCount = 0;
 
   private final ActorJob job;
@@ -38,10 +38,10 @@ public class ActorConditionImpl implements ActorCondition, ActorSubscription {
     }
   }
 
-    public ActorConditionImpl(final String conditionName, final ActorJob job) {
+  public ActorConditionImpl(final String conditionName, final ActorJob job) {
     this.conditionName = conditionName;
     this.job = job;
-        task = job.getTask();
+    task = job.getTask();
   }
 
   @Override

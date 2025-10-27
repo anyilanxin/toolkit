@@ -17,7 +17,6 @@
 package io.zeebe.util.sched;
 
 import io.zeebe.util.sched.ActorScheduler.ActorSchedulerBuilder;
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -34,11 +33,14 @@ public abstract class ActorThreadGroup {
   protected final MultiLevelWorkstealingGroup tasks;
 
   public ActorThreadGroup(
-          final String groupName, final int numOfThreads, final int numOfQueuesPerThread, final ActorSchedulerBuilder builder) {
+      final String groupName,
+      final int numOfThreads,
+      final int numOfQueuesPerThread,
+      final ActorSchedulerBuilder builder) {
     this.groupName = groupName;
     this.numOfThreads = numOfThreads;
 
-      tasks = new MultiLevelWorkstealingGroup(numOfThreads, numOfQueuesPerThread);
+    tasks = new MultiLevelWorkstealingGroup(numOfThreads, numOfQueuesPerThread);
 
     threads = new ActorThread[numOfThreads];
 
@@ -64,7 +66,7 @@ public abstract class ActorThreadGroup {
   protected abstract TaskScheduler createTaskScheduler(
       MultiLevelWorkstealingGroup tasks, ActorSchedulerBuilder builder);
 
-    public void submit(final ActorTask actorTask) {
+  public void submit(final ActorTask actorTask) {
     final int level = getLevel(actorTask);
 
     final ActorThread current = ActorThread.current();
@@ -88,7 +90,7 @@ public abstract class ActorThreadGroup {
   }
 
   public void start() {
-      for (final ActorThread actorThread : threads) {
+    for (final ActorThread actorThread : threads) {
       actorThread.start();
     }
   }

@@ -20,12 +20,11 @@ import io.zeebe.msgpack.MsgpackPropertyException;
 import io.zeebe.msgpack.value.ArrayValue;
 import io.zeebe.msgpack.value.BaseValue;
 import io.zeebe.msgpack.value.ValueArray;
-
 import java.util.Iterator;
 
 public class ArrayProperty<T extends BaseValue> extends BaseProperty<ArrayValue<T>>
     implements ValueArray<T> {
-    public ArrayProperty(final String keyString, final T innerValue) {
+  public ArrayProperty(final String keyString, final T innerValue) {
     super(keyString, new ArrayValue<>(innerValue));
     isSet = true;
   }

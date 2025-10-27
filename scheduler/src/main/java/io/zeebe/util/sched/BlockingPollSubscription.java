@@ -22,13 +22,13 @@ public class BlockingPollSubscription implements ActorSubscription, Runnable {
   private final ActorExecutor actorTaskExecutor;
 
   private volatile boolean isDone;
-    private final boolean isRecurring;
+  private final boolean isRecurring;
 
   public BlockingPollSubscription(
-          final ActorJob subscriptionJob,
-          final Runnable blockingAction,
-          final ActorExecutor actorTaskExecutor,
-          final boolean isRecurring) {
+      final ActorJob subscriptionJob,
+      final Runnable blockingAction,
+      final ActorExecutor actorTaskExecutor,
+      final boolean isRecurring) {
     this.subscriptionJob = subscriptionJob;
     this.blockingAction = blockingAction;
     this.actorTaskExecutor = actorTaskExecutor;

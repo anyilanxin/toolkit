@@ -35,16 +35,15 @@ package io.zeebe.util.sched;
 import io.zeebe.util.BoundedArrayQueue;
 import io.zeebe.util.sched.clock.ActorClock;
 import io.zeebe.util.sched.clock.DefaultActorClock;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
+import java.util.function.Consumer;
 import org.agrona.UnsafeAccess;
 import org.agrona.concurrent.BackoffIdleStrategy;
 import org.agrona.concurrent.ManyToManyConcurrentArrayQueue;
 import org.slf4j.MDC;
 import sun.misc.Unsafe;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.LockSupport;
-import java.util.function.Consumer;
 
 @SuppressWarnings("restriction")
 public class ActorThread extends Thread implements Consumer<Runnable> {
@@ -83,18 +82,18 @@ public class ActorThread extends Thread implements Consumer<Runnable> {
   ActorTask currentTask;
 
   public ActorThread(
-          final String name,
-          final int id,
-          final ActorThreadGroup threadGroup,
-          final TaskScheduler taskScheduler,
-          final ActorClock clock,
-          final ActorTimerQueue timerQueue) {
+      final String name,
+      final int id,
+      final ActorThreadGroup threadGroup,
+      final TaskScheduler taskScheduler,
+      final ActorClock clock,
+      final ActorTimerQueue timerQueue) {
     setName(name);
-      state = ActorThreadState.NEW;
-      threadId = id;
+    state = ActorThreadState.NEW;
+    threadId = id;
     this.clock = clock != null ? clock : new DefaultActorClock();
-      timerJobQueue = timerQueue != null ? timerQueue : new ActorTimerQueue(this.clock);
-      actorThreadGroup = threadGroup;
+    timerJobQueue = timerQueue != null ? timerQueue : new ActorTimerQueue(this.clock);
+    actorThreadGroup = threadGroup;
     this.taskScheduler = taskScheduler;
   }
 
@@ -242,7 +241,7 @@ public class ActorThread extends Thread implements Consumer<Runnable> {
     return job;
   }
 
-    void recycleJob(final ActorJob j) {
+  void recycleJob(final ActorJob j) {
     j.reset();
     jobs.offer(j);
   }

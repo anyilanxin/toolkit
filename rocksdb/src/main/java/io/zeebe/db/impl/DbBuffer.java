@@ -27,11 +27,11 @@ public class DbBuffer implements DbValue {
   private final ExpandableArrayBuffer value = new ExpandableArrayBuffer();
   private final DirectBuffer view = new UnsafeBuffer(0, 0);
 
-    public void wrapBuffer(final DirectBuffer buffer, final int offset, final int length) {
+  public void wrapBuffer(final DirectBuffer buffer, final int offset, final int length) {
     view.wrap(buffer, offset, length);
   }
 
-    public void wrapBuffer(final DirectBuffer buffer) {
+  public void wrapBuffer(final DirectBuffer buffer) {
     view.wrap(buffer);
   }
 

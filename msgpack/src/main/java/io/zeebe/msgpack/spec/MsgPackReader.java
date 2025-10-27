@@ -16,26 +16,26 @@
  */
 package io.zeebe.msgpack.spec;
 
-import org.agrona.DirectBuffer;
-import org.agrona.concurrent.UnsafeBuffer;
-
 import static io.zeebe.msgpack.spec.MsgPackCodes.*;
 import static org.agrona.BitUtil.SIZE_OF_INT;
 import static org.agrona.BitUtil.SIZE_OF_SHORT;
+
+import org.agrona.DirectBuffer;
+import org.agrona.concurrent.UnsafeBuffer;
 
 public class MsgPackReader {
   public DirectBuffer buffer = new UnsafeBuffer(0, 0);
   private int offset;
   protected MsgPackToken token = new MsgPackToken();
 
-    public MsgPackReader wrap(final DirectBuffer buffer, final int offset, final int length) {
+  public MsgPackReader wrap(final DirectBuffer buffer, final int offset, final int length) {
     this.buffer.wrap(buffer, offset, length);
     this.offset = 0;
     return this;
   }
 
   public void reset() {
-      offset = 0;
+    offset = 0;
   }
 
   public int readMapHeader() {
@@ -441,7 +441,7 @@ public class MsgPackReader {
     }
   }
 
-    public void skipBytes(final int stringLength) {
+  public void skipBytes(final int stringLength) {
     offset += stringLength;
   }
 
@@ -457,7 +457,7 @@ public class MsgPackReader {
             name, headerByte, offset - 1));
   }
 
-    private long ensurePositive(final long size) {
+  private long ensurePositive(final long size) {
     try {
       return MsgPackHelper.ensurePositive(size);
     } catch (final MsgpackException e) {

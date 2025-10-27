@@ -65,7 +65,7 @@ public enum MsgPackFormat {
 
   protected MsgPackType type;
 
-    MsgPackFormat(final MsgPackType type) {
+  MsgPackFormat(final MsgPackType type) {
     this.type = type;
   }
 

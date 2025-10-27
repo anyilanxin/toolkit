@@ -24,9 +24,9 @@ public enum ActorPriority {
 
   LOW(2);
 
-    private final short priorityClass;
+  private final short priorityClass;
 
-    ActorPriority(final int priorityClass) {
+  ActorPriority(final int priorityClass) {
     this.priorityClass = (short) priorityClass;
   }
 

@@ -16,12 +16,11 @@
  */
 package io.zeebe.util.sched;
 
-import io.zeebe.util.sched.clock.ActorClock;
+import static java.lang.Math.floorMod;
 
+import io.zeebe.util.sched.clock.ActorClock;
 import java.util.concurrent.TimeUnit;
 import java.util.function.IntFunction;
-
-import static java.lang.Math.floorMod;
 
 /**
  * Logic and state for the priority scheduling. Each {@link ActorThread} maintains a local instance
@@ -39,7 +38,7 @@ public class PriorityScheduler implements TaskScheduler {
 
     long sliceId = 0;
 
-      int getTimeSlicePriority(final long now) {
+    int getTimeSlicePriority(final long now) {
       sliceId = ((now - startNs) / TIME_SLICE_LENTH_NS);
 
       if (sliceId >= TIME_SLICES_PER_SECOND) {
@@ -73,9 +72,9 @@ public class PriorityScheduler implements TaskScheduler {
    */
   public PriorityScheduler(final IntFunction<ActorTask> getTaskFn, final double[] quotas) {
     this.getTaskFn = getTaskFn;
-      priorityCount = quotas.length;
-      slicePriorities = calclateSlicePriorities(quotas);
-      currentRun = new Run();
+    priorityCount = quotas.length;
+    slicePriorities = calclateSlicePriorities(quotas);
+    currentRun = new Run();
   }
 
   /*

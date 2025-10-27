@@ -16,11 +16,11 @@
  */
 package io.zeebe.msgpack.spec;
 
-import org.agrona.DirectBuffer;
-import org.agrona.MutableDirectBuffer;
-
 import static io.zeebe.msgpack.spec.MsgPackCodes.*;
 import static org.agrona.BitUtil.*;
+
+import org.agrona.DirectBuffer;
+import org.agrona.MutableDirectBuffer;
 
 /**
  * This class uses signed value semantics. That means, an integer 0xffff_ffff is treated as -1
@@ -30,14 +30,14 @@ public class MsgPackWriter {
   private MutableDirectBuffer buffer;
   private int offset;
 
-    public MsgPackWriter wrap(final MutableDirectBuffer buffer, final int offset) {
+  public MsgPackWriter wrap(final MutableDirectBuffer buffer, final int offset) {
     this.buffer = buffer;
     this.offset = offset;
 
     return this;
   }
 
-    public MsgPackWriter writeArrayHeader(final int size) {
+  public MsgPackWriter writeArrayHeader(final int size) {
     ensurePositive(size);
 
     if (size < (1 << 4)) {
@@ -60,7 +60,7 @@ public class MsgPackWriter {
     return this;
   }
 
-    public MsgPackWriter writeMapHeader(final int size) {
+  public MsgPackWriter writeMapHeader(final int size) {
     ensurePositive(size);
 
     if (size < (1 << 4)) {
@@ -79,7 +79,7 @@ public class MsgPackWriter {
     return this;
   }
 
-    private int writeMap32Header(int offset, final int size) {
+  private int writeMap32Header(int offset, final int size) {
     buffer.putByte(offset, MAP32);
     ++offset;
 
@@ -102,22 +102,22 @@ public class MsgPackWriter {
     writeMap32Header(offset, size);
   }
 
-    public MsgPackWriter writeRaw(final DirectBuffer buffer) {
+  public MsgPackWriter writeRaw(final DirectBuffer buffer) {
     return writeRaw(buffer, 0, buffer.capacity());
   }
 
-    public MsgPackWriter writeRaw(final DirectBuffer buff, final int offset, final int length) {
-        buffer.putBytes(this.offset, buff, offset, length);
+  public MsgPackWriter writeRaw(final DirectBuffer buff, final int offset, final int length) {
+    buffer.putBytes(this.offset, buff, offset, length);
     this.offset += length;
 
     return this;
   }
 
-    public MsgPackWriter writeString(final DirectBuffer bytes) {
-        return writeString(bytes, 0, bytes.capacity());
+  public MsgPackWriter writeString(final DirectBuffer bytes) {
+    return writeString(bytes, 0, bytes.capacity());
   }
 
-    public MsgPackWriter writeString(final DirectBuffer buff, final int offset, final int length) {
+  public MsgPackWriter writeString(final DirectBuffer buff, final int offset, final int length) {
     writeStringHeader(length);
     writeRaw(buff, offset, length);
     return this;
@@ -189,7 +189,7 @@ public class MsgPackWriter {
     return this;
   }
 
-    public MsgPackWriter writeStringHeader(final int len) {
+  public MsgPackWriter writeStringHeader(final int len) {
     ensurePositive(len);
     if (len < (1 << 5)) {
       buffer.putByte(offset, (byte) (FIXSTR_PREFIX | len));
@@ -217,17 +217,17 @@ public class MsgPackWriter {
     return this;
   }
 
-    public MsgPackWriter writeBinary(final DirectBuffer data) {
+  public MsgPackWriter writeBinary(final DirectBuffer data) {
     return writeBinary(data, 0, data.capacity());
   }
 
-    public MsgPackWriter writeBinary(final DirectBuffer data, final int offset, final int length) {
+  public MsgPackWriter writeBinary(final DirectBuffer data, final int offset, final int length) {
     writeBinaryHeader(length);
     writeRaw(data, offset, length);
     return this;
   }
 
-    public MsgPackWriter writeBinaryHeader(final int len) {
+  public MsgPackWriter writeBinaryHeader(final int len) {
     ensurePositive(len);
     if (len < (1 << 8)) {
       buffer.putByte(offset, BIN8);
@@ -252,7 +252,7 @@ public class MsgPackWriter {
     return this;
   }
 
-    public MsgPackWriter writeBoolean(final boolean val) {
+  public MsgPackWriter writeBoolean(final boolean val) {
     buffer.putByte(offset, val ? TRUE : FALSE);
     ++offset;
 
@@ -297,7 +297,7 @@ public class MsgPackWriter {
     return offset;
   }
 
-    public static int getEncodedMapHeaderLenght(final int size) {
+  public static int getEncodedMapHeaderLenght(final int size) {
     final int length;
 
     if (size < (1 << 4)) {
@@ -311,7 +311,7 @@ public class MsgPackWriter {
     return length;
   }
 
-    public static int getEncodedArrayHeaderLenght(final int size) {
+  public static int getEncodedArrayHeaderLenght(final int size) {
     final int length;
 
     if (size < (1 << 4)) {
@@ -325,7 +325,7 @@ public class MsgPackWriter {
     return length;
   }
 
-    public static int getEncodedStringHeaderLength(final int len) {
+  public static int getEncodedStringHeaderLength(final int len) {
     final int encodedLength;
 
     if (len < (1 << 5)) {
@@ -341,11 +341,11 @@ public class MsgPackWriter {
     return encodedLength;
   }
 
-    public static int getEncodedStringLength(final int len) {
+  public static int getEncodedStringLength(final int len) {
     return getEncodedStringHeaderLength(len) + len;
   }
 
-    public static int getEncodedLongValueLength(final long v) {
+  public static int getEncodedLongValueLength(final long v) {
     int length = 1;
 
     if (v < -(1L << 5)) {
@@ -385,7 +385,7 @@ public class MsgPackWriter {
     return 1;
   }
 
-    public static int getEncodedBinaryValueLength(final int len) {
+  public static int getEncodedBinaryValueLength(final int len) {
     final int headerLength;
 
     if (len < (1 << 8)) {
@@ -399,7 +399,7 @@ public class MsgPackWriter {
     return headerLength + len;
   }
 
-    private void ensurePositive(final long size) {
+  private void ensurePositive(final long size) {
     try {
       MsgPackHelper.ensurePositive(size);
     } catch (final MsgpackException e) {

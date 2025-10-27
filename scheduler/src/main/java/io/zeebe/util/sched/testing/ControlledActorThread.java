@@ -22,20 +22,19 @@ import io.zeebe.util.sched.ActorThreadGroup;
 import io.zeebe.util.sched.ActorTimerQueue;
 import io.zeebe.util.sched.TaskScheduler;
 import io.zeebe.util.sched.clock.ActorClock;
-
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 public class ControlledActorThread extends ActorThread {
-    private final CyclicBarrier barrier = new CyclicBarrier(2);
+  private final CyclicBarrier barrier = new CyclicBarrier(2);
 
   public ControlledActorThread(
-          final String name,
-          final int id,
-          final ActorThreadGroup threadGroup,
-          final TaskScheduler taskScheduler,
-          final ActorClock clock,
-          final ActorTimerQueue timerQueue) {
+      final String name,
+      final int id,
+      final ActorThreadGroup threadGroup,
+      final TaskScheduler taskScheduler,
+      final ActorClock clock,
+      final ActorTimerQueue timerQueue) {
     super(name, id, threadGroup, taskScheduler, clock, timerQueue);
     idleStrategy = new ControlledIdleStartegy();
   }

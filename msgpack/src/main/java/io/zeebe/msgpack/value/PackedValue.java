@@ -18,10 +18,9 @@ package io.zeebe.msgpack.value;
 
 import io.zeebe.msgpack.spec.MsgPackReader;
 import io.zeebe.msgpack.spec.MsgPackWriter;
+import java.util.Objects;
 import org.agrona.DirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
-
-import java.util.Objects;
 
 public class PackedValue extends BaseValue {
   private final DirectBuffer buffer = new UnsafeBuffer(0, 0);
@@ -29,12 +28,12 @@ public class PackedValue extends BaseValue {
 
   public PackedValue() {}
 
-    public PackedValue(final DirectBuffer defaultValue, final int offset, final int length) {
+  public PackedValue(final DirectBuffer defaultValue, final int offset, final int length) {
     wrap(defaultValue, offset, length);
   }
 
-    public void wrap(final DirectBuffer buff, final int offset, final int length) {
-        buffer.wrap(buff, offset, length);
+  public void wrap(final DirectBuffer buff, final int offset, final int length) {
+    buffer.wrap(buff, offset, length);
     this.length = length;
   }
 

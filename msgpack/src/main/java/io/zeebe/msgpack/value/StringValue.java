@@ -16,20 +16,19 @@
  */
 package io.zeebe.msgpack.value;
 
+import static io.zeebe.util.buffer.BufferUtil.wrapString;
+
 import io.zeebe.msgpack.spec.MsgPackReader;
 import io.zeebe.msgpack.spec.MsgPackWriter;
+import java.util.Objects;
 import org.agrona.DirectBuffer;
 import org.agrona.MutableDirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
 
-import java.util.Objects;
-
-import static io.zeebe.util.buffer.BufferUtil.wrapString;
-
 public class StringValue extends BaseValue {
   public static final String EMPTY_STRING = "";
 
-    private final MutableDirectBuffer bytes = new UnsafeBuffer(0, 0);
+  private final MutableDirectBuffer bytes = new UnsafeBuffer(0, 0);
   private int length;
   private int hashCode;
 
@@ -37,15 +36,15 @@ public class StringValue extends BaseValue {
     this(EMPTY_STRING);
   }
 
-    public StringValue(final String string) {
+  public StringValue(final String string) {
     this(wrapString(string));
   }
 
-    public StringValue(final DirectBuffer buffer) {
+  public StringValue(final DirectBuffer buffer) {
     this(buffer, 0, buffer.capacity());
   }
 
-    public StringValue(final DirectBuffer buffer, final int offset, final int length) {
+  public StringValue(final DirectBuffer buffer, final int offset, final int length) {
     wrap(buffer, offset, length);
   }
 
@@ -56,28 +55,28 @@ public class StringValue extends BaseValue {
     hashCode = 0;
   }
 
-    public void wrap(final byte[] bytes) {
+  public void wrap(final byte[] bytes) {
     this.bytes.wrap(bytes);
-        length = bytes.length;
-        hashCode = 0;
+    length = bytes.length;
+    hashCode = 0;
   }
 
-    public void wrap(final DirectBuffer buff) {
+  public void wrap(final DirectBuffer buff) {
     wrap(buff, 0, buff.capacity());
   }
 
-    public void wrap(final DirectBuffer buff, final int offset, final int length) {
+  public void wrap(final DirectBuffer buff, final int offset, final int length) {
     if (length == 0) {
-        bytes.wrap(0, 0);
+      bytes.wrap(0, 0);
     } else {
-        bytes.wrap(buff, offset, length);
+      bytes.wrap(buff, offset, length);
     }
     this.length = length;
-        hashCode = 0;
+    hashCode = 0;
   }
 
-    public void wrap(final StringValue anotherString) {
-        wrap(anotherString.getValue());
+  public void wrap(final StringValue anotherString) {
+    wrap(anotherString.getValue());
   }
 
   public int getLength() {
@@ -108,7 +107,7 @@ public class StringValue extends BaseValue {
 
     reader.skipBytes(stringLength);
 
-      wrap(buffer, offset, stringLength);
+    wrap(buffer, offset, stringLength);
   }
 
   @Override

@@ -16,19 +16,18 @@
  */
 package io.zeebe.util.collection;
 
+import static io.zeebe.util.collection.CompactListDescriptor.*;
+import static java.lang.Math.max;
+
 import io.zeebe.util.CloseableSilently;
 import io.zeebe.util.allocation.AllocatedBuffer;
 import io.zeebe.util.allocation.BufferAllocator;
+import java.io.InputStream;
+import java.util.Comparator;
 import org.agrona.DirectBuffer;
 import org.agrona.MutableDirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
 import org.agrona.io.DirectBufferInputStream;
-
-import java.io.InputStream;
-import java.util.Comparator;
-
-import static io.zeebe.util.collection.CompactListDescriptor.*;
-import static java.lang.Math.max;
 
 /** Compact, off-heap list datastructure */
 public class CompactList implements Iterable<MutableDirectBuffer>, CloseableSilently {
@@ -40,14 +39,16 @@ public class CompactList implements Iterable<MutableDirectBuffer>, CloseableSile
 
   protected final CompactListIterator iterator;
 
-    public CompactList(final int elementMaxLength, final int capacity, final BufferAllocator bufferAllocator) {
+  public CompactList(
+      final int elementMaxLength, final int capacity, final BufferAllocator bufferAllocator) {
     this(
         bufferAllocator.allocate(requiredBufferCapacity(framedLength(elementMaxLength), capacity)),
         elementMaxLength,
         capacity);
   }
 
-    public CompactList(final AllocatedBuffer allocatedBuffer, final int elementMaxLength, final int capacity) {
+  public CompactList(
+      final AllocatedBuffer allocatedBuffer, final int elementMaxLength, final int capacity) {
     this.allocatedBuffer = allocatedBuffer;
 
     framedElementLength = framedLength(elementMaxLength);
@@ -80,7 +81,7 @@ public class CompactList implements Iterable<MutableDirectBuffer>, CloseableSile
     framedElementLength = framedLength(elementMaxLength);
 
     iterator = new CompactListIterator(this);
-      allocatedBuffer = null;
+    allocatedBuffer = null;
   }
 
   /**
@@ -361,18 +362,24 @@ public class CompactList implements Iterable<MutableDirectBuffer>, CloseableSile
     listBuffer.putInt(sizeOffset(), size);
   }
 
-    protected void setValue(final DirectBuffer buffer, final int offset, final int length, final int idx) {
+  protected void setValue(
+      final DirectBuffer buffer, final int offset, final int length, final int idx) {
     final int elementOffset = elementOffset(framedElementLength, idx);
     setValue(buffer, offset, length, idx, elementOffset);
   }
 
-    protected void setValue(final DirectBuffer buffer, final int offset, final int length, final int idx, final int elementOffset) {
+  protected void setValue(
+      final DirectBuffer buffer,
+      final int offset,
+      final int length,
+      final int idx,
+      final int elementOffset) {
     setMemory(elementOffset, framedElementLength, (byte) 0);
     listBuffer.putInt(elementLengthOffset(elementOffset), length);
     listBuffer.putBytes(elementDataOffset(elementOffset), buffer, offset, length);
   }
 
-    protected void setMemory(final int idx, final int length, final byte value) {
+  protected void setMemory(final int idx, final int length, final byte value) {
     listBuffer.setMemory(idx, length, value);
   }
 

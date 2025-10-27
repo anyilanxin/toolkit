@@ -18,11 +18,10 @@ package io.zeebe.msgpack.value;
 
 import io.zeebe.msgpack.spec.MsgPackReader;
 import io.zeebe.msgpack.spec.MsgPackWriter;
-import org.agrona.ExpandableArrayBuffer;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import org.agrona.ExpandableArrayBuffer;
 
 public class ArrayValue<T extends BaseValue> extends BaseValue implements Iterator<T>, Iterable<T> {
   private final MsgPackWriter writer = new MsgPackWriter();

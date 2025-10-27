@@ -16,16 +16,15 @@
  */
 package io.zeebe.util.buffer;
 
+import static io.zeebe.util.EnsureUtil.ensureGreaterThanOrEqual;
+import static io.zeebe.util.StringUtil.getBytes;
+
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import org.agrona.DirectBuffer;
 import org.agrona.ExpandableArrayBuffer;
 import org.agrona.MutableDirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
-
-import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
-
-import static io.zeebe.util.EnsureUtil.ensureGreaterThanOrEqual;
-import static io.zeebe.util.StringUtil.getBytes;
 
 public final class BufferUtil {
   public static final int NO_WRAP = 1;
@@ -49,7 +48,7 @@ public final class BufferUtil {
     return new String(bytes, StandardCharsets.UTF_8);
   }
 
-    public static DirectBuffer wrapString(final String argument) {
+  public static DirectBuffer wrapString(final String argument) {
     return new UnsafeBuffer(getBytes(argument));
   }
 
@@ -197,7 +196,9 @@ public final class BufferUtil {
     return builder.toString();
   }
 
-  /** @return a new array that is a copy of the buffer's contents */
+  /**
+   * @return a new array that is a copy of the buffer's contents
+   */
   public static byte[] bufferAsArray(final DirectBuffer buffer) {
     final byte[] array;
 
@@ -207,7 +208,7 @@ public final class BufferUtil {
     return array;
   }
 
-    public static MutableDirectBuffer wrapArray(final byte[] array) {
+  public static MutableDirectBuffer wrapArray(final byte[] array) {
     return new UnsafeBuffer(array);
   }
 
@@ -216,7 +217,7 @@ public final class BufferUtil {
     return new UnsafeBuffer(intArrayToByteArray(bytes));
   }
 
-    public static int bufferContentsHash(final DirectBuffer buffer) {
+  public static int bufferContentsHash(final DirectBuffer buffer) {
     int hashCode = 1;
 
     for (int i = 0, length = buffer.capacity(); i < length; i++) {
@@ -238,12 +239,12 @@ public final class BufferUtil {
    * @return true if array starts with the all bytes contained in prefix
    */
   public static boolean startsWith(
-          final byte[] prefix,
-          final int prefixOffset,
-          final int prefixLength,
-          final byte[] content,
-          int contentOffset,
-          final int contentLength) {
+      final byte[] prefix,
+      final int prefixOffset,
+      final int prefixLength,
+      final byte[] content,
+      int contentOffset,
+      final int contentLength) {
     if (contentLength < prefixLength) {
       return false;
     }
@@ -257,7 +258,7 @@ public final class BufferUtil {
     return true;
   }
 
-    protected static byte[] intArrayToByteArray(final int[] input) {
+  protected static byte[] intArrayToByteArray(final int[] input) {
     final byte[] result = new byte[input.length];
     for (int i = 0; i < input.length; i++) {
       result[i] = (byte) input[i];

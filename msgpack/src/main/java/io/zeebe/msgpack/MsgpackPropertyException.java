@@ -23,15 +23,16 @@ public class MsgpackPropertyException extends MsgpackException {
   private static final String MESSAGE_FORMAT = "Property '%s' is invalid: %s";
   private final StringValue property;
 
-    public MsgpackPropertyException(final StringValue property, final String message) {
+  public MsgpackPropertyException(final StringValue property, final String message) {
     this(property, message, null);
   }
 
-    public MsgpackPropertyException(final StringValue property, final Throwable cause) {
+  public MsgpackPropertyException(final StringValue property, final Throwable cause) {
     this(property, cause.getMessage(), cause);
   }
 
-    public MsgpackPropertyException(final StringValue property, final String message, final Throwable cause) {
+  public MsgpackPropertyException(
+      final StringValue property, final String message, final Throwable cause) {
     super(String.format(MESSAGE_FORMAT, property, message), cause);
     this.property = property;
   }

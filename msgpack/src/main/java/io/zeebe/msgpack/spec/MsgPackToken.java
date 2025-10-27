@@ -46,7 +46,7 @@ public class MsgPackToken {
     return totalLength;
   }
 
-    public void setTotalLength(final int totalLength) {
+  public void setTotalLength(final int totalLength) {
     this.totalLength = totalLength;
   }
 
@@ -62,11 +62,11 @@ public class MsgPackToken {
     return valueBuffer;
   }
 
-    public void setValue(final DirectBuffer buffer, final int offset, final int length) {
+  public void setValue(final DirectBuffer buffer, final int offset, final int length) {
     if (length == 0) {
       valueBuffer.wrap(0, 0);
     } else if (offset + length <= buffer.capacity()) {
-        valueBuffer.wrap(buffer, offset, length);
+      valueBuffer.wrap(buffer, offset, length);
     } else {
       final int result = offset + length;
       throw new MsgpackReaderException(
@@ -76,27 +76,27 @@ public class MsgPackToken {
     }
   }
 
-    public void setValue(final double value) {
-        floatValue = value;
+  public void setValue(final double value) {
+    floatValue = value;
   }
 
-    public void setValue(final long value) {
-        integerValue = value;
+  public void setValue(final long value) {
+    integerValue = value;
   }
 
-    public void setValue(final boolean value) {
-        booleanValue = value;
+  public void setValue(final boolean value) {
+    booleanValue = value;
   }
 
-    public void setMapHeader(final int size) {
+  public void setMapHeader(final int size) {
     this.size = size;
   }
 
-    public void setArrayHeader(final int size) {
+  public void setArrayHeader(final int size) {
     this.size = size;
   }
 
-    public void setType(final MsgPackType type) {
+  public void setType(final MsgPackType type) {
     this.type = type;
   }
 

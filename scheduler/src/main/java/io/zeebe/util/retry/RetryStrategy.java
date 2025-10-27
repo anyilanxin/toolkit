@@ -17,7 +17,6 @@
 package io.zeebe.util.retry;
 
 import io.zeebe.util.sched.future.ActorFuture;
-
 import java.util.function.BooleanSupplier;
 
 public interface RetryStrategy {

@@ -16,10 +16,10 @@
  */
 package io.zeebe.msgpack.property;
 
+import static io.zeebe.util.StringUtil.getBytes;
+
 import io.zeebe.msgpack.value.StringValue;
 import org.agrona.DirectBuffer;
-
-import static io.zeebe.util.StringUtil.getBytes;
 
 public class StringProperty extends BaseProperty<StringValue> {
 
@@ -37,7 +37,7 @@ public class StringProperty extends BaseProperty<StringValue> {
 
   public void setValue(final String value) {
     this.value.wrap(getBytes(value));
-      isSet = true;
+    isSet = true;
   }
 
   public void setValue(final DirectBuffer buffer) {
@@ -45,7 +45,7 @@ public class StringProperty extends BaseProperty<StringValue> {
   }
 
   public void setValue(final DirectBuffer buffer, final int offset, final int length) {
-      value.wrap(buffer, offset, length);
-      isSet = true;
+    value.wrap(buffer, offset, length);
+    isSet = true;
   }
 }

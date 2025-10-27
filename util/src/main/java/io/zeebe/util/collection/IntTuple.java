@@ -20,7 +20,7 @@ public class IntTuple<R> {
   private int left;
   private R right;
 
-    public IntTuple(final int left, final R right) {
+  public IntTuple(final int left, final R right) {
     this.left = left;
     this.right = right;
   }
@@ -33,11 +33,11 @@ public class IntTuple<R> {
     return right;
   }
 
-    public void setInt(final int left) {
+  public void setInt(final int left) {
     this.left = left;
   }
 
-    public void setRight(final R right) {
+  public void setRight(final R right) {
     this.right = right;
   }
 

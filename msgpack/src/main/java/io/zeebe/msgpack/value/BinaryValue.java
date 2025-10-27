@@ -18,13 +18,12 @@ package io.zeebe.msgpack.value;
 
 import io.zeebe.msgpack.spec.MsgPackReader;
 import io.zeebe.msgpack.spec.MsgPackWriter;
-import org.agrona.DirectBuffer;
-import org.agrona.MutableDirectBuffer;
-import org.agrona.concurrent.UnsafeBuffer;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Objects;
+import org.agrona.DirectBuffer;
+import org.agrona.MutableDirectBuffer;
+import org.agrona.concurrent.UnsafeBuffer;
 
 public class BinaryValue extends BaseValue {
   protected final MutableDirectBuffer data = new UnsafeBuffer(0, 0);
@@ -32,7 +31,7 @@ public class BinaryValue extends BaseValue {
 
   public BinaryValue() {}
 
-    public BinaryValue(final DirectBuffer initialValue, final int offset, final int length) {
+  public BinaryValue(final DirectBuffer initialValue, final int offset, final int length) {
     wrap(initialValue, offset, length);
   }
 
@@ -42,21 +41,21 @@ public class BinaryValue extends BaseValue {
     length = 0;
   }
 
-    public void wrap(final DirectBuffer buff) {
+  public void wrap(final DirectBuffer buff) {
     wrap(buff, 0, buff.capacity());
   }
 
-    public void wrap(final DirectBuffer buff, final int offset, final int length) {
+  public void wrap(final DirectBuffer buff, final int offset, final int length) {
     if (length == 0) {
-        data.wrap(0, 0);
+      data.wrap(0, 0);
     } else {
-        data.wrap(buff, offset, length);
+      data.wrap(buff, offset, length);
     }
     this.length = length;
   }
 
-    public void wrap(final StringValue decodedKey) {
-        wrap(decodedKey.getValue());
+  public void wrap(final StringValue decodedKey) {
+    wrap(decodedKey.getValue());
   }
 
   public DirectBuffer getValue() {
@@ -86,7 +85,7 @@ public class BinaryValue extends BaseValue {
 
     reader.skipBytes(stringLength);
 
-      wrap(buffer, offset, stringLength);
+    wrap(buffer, offset, stringLength);
   }
 
   @Override

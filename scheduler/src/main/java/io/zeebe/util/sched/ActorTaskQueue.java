@@ -16,9 +16,9 @@
  */
 package io.zeebe.util.sched;
 
-import org.agrona.concurrent.ManyToOneConcurrentLinkedQueue;
-
 import static org.agrona.UnsafeAccess.UNSAFE;
+
+import org.agrona.concurrent.ManyToOneConcurrentLinkedQueue;
 
 @SuppressWarnings("restriction")
 class ActorTaskQueueNode {
@@ -40,17 +40,17 @@ class ActorTaskQueueNode {
   long stateCount;
   ActorTask task;
 
-    void nextOrdered(final ActorTaskQueueNode t) {
+  void nextOrdered(final ActorTaskQueueNode t) {
     assert t != this;
     UNSAFE.putOrderedObject(this, NEXT_OFFSET, t);
   }
 
-    void prevOrdered(final ActorTaskQueueNode t) {
+  void prevOrdered(final ActorTaskQueueNode t) {
     assert t != this;
     UNSAFE.putObjectVolatile(this, PREV_OFFSET, t);
   }
 
-    public void setTask(final ActorTask task) {
+  public void setTask(final ActorTask task) {
     this.task = task;
   }
 }
@@ -126,7 +126,7 @@ public class ActorTaskQueue extends ActorTaskQueueHead {
    * @return the actor which was stolen or null in case no actor is available
    */
   public ActorTask trySteal() {
-      ActorTaskQueueNode node = tail;
+    ActorTaskQueueNode node = tail;
 
     while (node != null && node != empty) {
       final ActorTask task = node.task;

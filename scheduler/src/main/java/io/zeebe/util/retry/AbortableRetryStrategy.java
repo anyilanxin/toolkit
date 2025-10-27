@@ -19,7 +19,6 @@ package io.zeebe.util.retry;
 import io.zeebe.util.sched.ActorControl;
 import io.zeebe.util.sched.future.ActorFuture;
 import io.zeebe.util.sched.future.CompletableActorFuture;
-
 import java.util.function.BooleanSupplier;
 
 public class AbortableRetryStrategy implements RetryStrategy {
@@ -28,9 +27,9 @@ public class AbortableRetryStrategy implements RetryStrategy {
   private final ActorRetryMechanism retryMechanism;
   private CompletableActorFuture<Boolean> currentFuture;
 
-    public AbortableRetryStrategy(final ActorControl actor) {
+  public AbortableRetryStrategy(final ActorControl actor) {
     this.actor = actor;
-        retryMechanism = new ActorRetryMechanism(actor);
+    retryMechanism = new ActorRetryMechanism(actor);
   }
 
   @Override
@@ -39,7 +38,8 @@ public class AbortableRetryStrategy implements RetryStrategy {
   }
 
   @Override
-  public ActorFuture<Boolean> runWithRetry(final OperationToRetry callable, final BooleanSupplier condition) {
+  public ActorFuture<Boolean> runWithRetry(
+      final OperationToRetry callable, final BooleanSupplier condition) {
     currentFuture = new CompletableActorFuture<>();
     retryMechanism.wrap(callable, condition, currentFuture);
 

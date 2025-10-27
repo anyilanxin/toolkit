@@ -16,13 +16,12 @@
  */
 package io.zeebe.db;
 
+import java.util.function.Consumer;
 import org.agrona.DirectBuffer;
 import org.agrona.ExpandableArrayBuffer;
 import org.rocksdb.ColumnFamilyHandle;
 import org.rocksdb.ReadOptions;
 import org.rocksdb.RocksIterator;
-
-import java.util.function.Consumer;
 
 /** Represents the shared state of a database interaction */
 public interface DbContext {
@@ -34,7 +33,9 @@ public interface DbContext {
    */
   void writeKey(DbKey key);
 
-  /** @return the shared key buffer array */
+  /**
+   * @return the shared key buffer array
+   */
   byte[] getKeyBufferArray();
 
   /**
@@ -44,7 +45,9 @@ public interface DbContext {
    */
   void writeValue(DbValue value);
 
-  /** @return the shared value buffer array */
+  /**
+   * @return the shared value buffer array
+   */
   byte[] getValueBufferArray();
 
   /**
@@ -54,10 +57,14 @@ public interface DbContext {
    */
   void wrapKeyView(byte[] key);
 
-  /** @return the shared key view */
+  /**
+   * @return the shared key view
+   */
   DirectBuffer getKeyView();
 
-  /** @return true if the key view is currently empty, false otherwise */
+  /**
+   * @return true if the key view is currently empty, false otherwise
+   */
   boolean isKeyViewEmpty();
 
   /**
@@ -67,10 +74,14 @@ public interface DbContext {
    */
   void wrapValueView(byte[] value);
 
-  /** @return the shared value view */
+  /**
+   * @return the shared value view
+   */
   DirectBuffer getValueView();
 
-  /** @return true if the value view is currently empty, false otherwise */
+  /**
+   * @return true if the value view is currently empty, false otherwise
+   */
   boolean isValueViewEmpty();
 
   /**

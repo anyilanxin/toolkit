@@ -16,26 +16,25 @@
  */
 package io.zeebe.util.collection;
 
-import org.agrona.concurrent.ManyToManyConcurrentArrayQueue;
-
 import java.util.function.Function;
+import org.agrona.concurrent.ManyToManyConcurrentArrayQueue;
 
 public class ObjectPool<T> {
   protected ManyToManyConcurrentArrayQueue<T> queue;
 
-    public ObjectPool(final int capacity, final Function<ObjectPool<T>, T> objectFactory) {
-        queue = new ManyToManyConcurrentArrayQueue<>(capacity);
+  public ObjectPool(final int capacity, final Function<ObjectPool<T>, T> objectFactory) {
+    queue = new ManyToManyConcurrentArrayQueue<>(capacity);
 
     for (int i = 0; i < capacity; i++) {
-        queue.add(objectFactory.apply(this));
+      queue.add(objectFactory.apply(this));
     }
   }
 
-    public void returnObject(final T pooledFuture) {
+  public void returnObject(final T pooledFuture) {
     queue.add(pooledFuture);
   }
 
   public T request() {
-      return queue.poll();
+    return queue.poll();
   }
 }

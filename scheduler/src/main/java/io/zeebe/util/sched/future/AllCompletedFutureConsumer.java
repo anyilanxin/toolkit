@@ -25,7 +25,7 @@ public class AllCompletedFutureConsumer<T> implements BiConsumer<T, Throwable> {
 
   private Throwable occuredFailure = null;
 
-    public AllCompletedFutureConsumer(final int pendingFutures, final Consumer<Throwable> callback) {
+  public AllCompletedFutureConsumer(final int pendingFutures, final Consumer<Throwable> callback) {
     this.pendingFutures = pendingFutures;
     this.callback = callback;
   }
@@ -35,7 +35,7 @@ public class AllCompletedFutureConsumer<T> implements BiConsumer<T, Throwable> {
     pendingFutures -= 1;
 
     if (failure != null) {
-        occuredFailure = failure;
+      occuredFailure = failure;
     }
 
     if (pendingFutures == 0) {

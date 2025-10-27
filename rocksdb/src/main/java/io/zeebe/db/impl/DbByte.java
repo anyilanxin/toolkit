@@ -25,7 +25,7 @@ public class DbByte implements DbKey, DbValue {
 
   private byte value;
 
-    public void wrapByte(final byte value) {
+  public void wrapByte(final byte value) {
     this.value = value;
   }
 

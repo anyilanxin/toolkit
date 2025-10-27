@@ -64,7 +64,7 @@ public class DurationUtil {
     return Duration.of(value, unit);
   }
 
-    private static String extractUnit(final CharSequence humanReadable) {
+  private static String extractUnit(final CharSequence humanReadable) {
     final StringBuilder unitBuilder = new StringBuilder();
     for (int i = humanReadable.length() - 1; i >= 0; i--) {
       final char current = humanReadable.charAt(i);

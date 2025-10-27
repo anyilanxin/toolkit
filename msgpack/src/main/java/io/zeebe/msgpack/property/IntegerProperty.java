@@ -19,11 +19,11 @@ package io.zeebe.msgpack.property;
 import io.zeebe.msgpack.value.IntegerValue;
 
 public class IntegerProperty extends BaseProperty<IntegerValue> {
-    public IntegerProperty(final String key) {
+  public IntegerProperty(final String key) {
     super(key, new IntegerValue());
   }
 
-    public IntegerProperty(final String key, final int defaultValue) {
+  public IntegerProperty(final String key, final int defaultValue) {
     super(key, new IntegerValue(), new IntegerValue(defaultValue));
   }
 
@@ -31,8 +31,8 @@ public class IntegerProperty extends BaseProperty<IntegerValue> {
     return resolveValue().getValue();
   }
 
-    public void setValue(final int value) {
+  public void setValue(final int value) {
     this.value.setValue(value);
-        isSet = true;
+    isSet = true;
   }
 }

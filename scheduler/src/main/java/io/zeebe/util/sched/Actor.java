@@ -45,7 +45,7 @@ public abstract class Actor {
     // notification that timers, conditions, etc. will no longer trigger from now on
   }
 
-    public static Actor wrap(final Consumer<ActorControl> r) {
+  public static Actor wrap(final Consumer<ActorControl> r) {
     return new Actor() {
       @Override
       protected void onActorStarted() {

@@ -19,11 +19,11 @@ package io.zeebe.msgpack.property;
 import io.zeebe.msgpack.value.EnumValue;
 
 public class EnumProperty<E extends Enum<E>> extends BaseProperty<EnumValue<E>> {
-    public EnumProperty(final String key, final Class<E> type) {
+  public EnumProperty(final String key, final Class<E> type) {
     super(key, new EnumValue<>(type));
   }
 
-    public EnumProperty(final String key, final Class<E> type, final E defaultValue) {
+  public EnumProperty(final String key, final Class<E> type, final E defaultValue) {
     super(key, new EnumValue<>(type), new EnumValue<>(type, defaultValue));
   }
 
@@ -31,8 +31,8 @@ public class EnumProperty<E extends Enum<E>> extends BaseProperty<EnumValue<E>> 
     return resolveValue().getValue();
   }
 
-    public void setValue(final E value) {
+  public void setValue(final E value) {
     this.value.setValue(value);
-        isSet = true;
+    isSet = true;
   }
 }

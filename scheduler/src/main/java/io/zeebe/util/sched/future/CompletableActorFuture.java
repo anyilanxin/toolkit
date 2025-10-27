@@ -16,19 +16,18 @@
  */
 package io.zeebe.util.sched.future;
 
+import static org.agrona.UnsafeAccess.UNSAFE;
+
 import io.zeebe.util.sched.ActorTask;
 import io.zeebe.util.sched.ActorThread;
 import io.zeebe.util.sched.FutureUtil;
-import org.agrona.concurrent.ManyToOneConcurrentLinkedQueue;
-
 import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
-
-import static org.agrona.UnsafeAccess.UNSAFE;
+import org.agrona.concurrent.ManyToOneConcurrentLinkedQueue;
 
 /** Completable future implementation that is garbage free and reusable */
 @SuppressWarnings("restriction")
@@ -57,19 +56,19 @@ public class CompletableActorFuture<V> implements ActorFuture<V> {
     setAwaitingResult();
   }
 
-    private CompletableActorFuture(final V value) {
+  private CompletableActorFuture(final V value) {
     this.value = value;
-        state = COMPLETED;
+    state = COMPLETED;
   }
 
-    private CompletableActorFuture(final Throwable throwable) {
+  private CompletableActorFuture(final Throwable throwable) {
     ensureValidThrowable(throwable);
-        failure = throwable.getMessage();
-        failureCause = throwable;
-        state = COMPLETED_EXCEPTIONALLY;
+    failure = throwable.getMessage();
+    failureCause = throwable;
+    state = COMPLETED_EXCEPTIONALLY;
   }
 
-    private void ensureValidThrowable(final Throwable throwable) {
+  private void ensureValidThrowable(final Throwable throwable) {
     if (throwable == null) {
       throw new NullPointerException("Throwable must not be null.");
     }
@@ -80,11 +79,11 @@ public class CompletableActorFuture<V> implements ActorFuture<V> {
     isDoneCondition = completionLock.newCondition();
   }
 
-    public static <V> CompletableActorFuture<V> completed(final V result) {
+  public static <V> CompletableActorFuture<V> completed(final V result) {
     return new CompletableActorFuture<>(result); // cast for null result
   }
 
-    public static <V> CompletableActorFuture<V> completedExceptionally(final Throwable throwable) {
+  public static <V> CompletableActorFuture<V> completedExceptionally(final Throwable throwable) {
     return new CompletableActorFuture<>(throwable);
   }
 
@@ -164,7 +163,7 @@ public class CompletableActorFuture<V> implements ActorFuture<V> {
   public void complete(final V value) {
     if (UNSAFE.compareAndSwapInt(this, STATE_OFFSET, AWAITING_RESULT, COMPLETING)) {
       this.value = value;
-        state = COMPLETED;
+      state = COMPLETED;
       notifyBlockedTasks();
     } else {
       final String err =
@@ -184,8 +183,8 @@ public class CompletableActorFuture<V> implements ActorFuture<V> {
 
     if (UNSAFE.compareAndSwapInt(this, STATE_OFFSET, AWAITING_RESULT, COMPLETING)) {
       this.failure = failure;
-        failureCause = throwable;
-        state = COMPLETED_EXCEPTIONALLY;
+      failureCause = throwable;
+      state = COMPLETED_EXCEPTIONALLY;
       notifyBlockedTasks();
     } else {
       final String err =
@@ -214,7 +213,7 @@ public class CompletableActorFuture<V> implements ActorFuture<V> {
     }
   }
 
-    private void notifyAllInQueue(final Queue<ActorTask> tasks) {
+  private void notifyAllInQueue(final Queue<ActorTask> tasks) {
     while (!tasks.isEmpty()) {
       final ActorTask task = tasks.poll();
 
@@ -266,16 +265,16 @@ public class CompletableActorFuture<V> implements ActorFuture<V> {
     }
   }
 
-    public void completeWith(final CompletableActorFuture<V> otherFuture) {
+  public void completeWith(final CompletableActorFuture<V> otherFuture) {
     if (!otherFuture.isDone()) {
       throw new IllegalArgumentException(
           "Future is not completed, can't complete this future with uncompleted future.");
     }
 
     if (otherFuture.isCompletedExceptionally()) {
-        completeExceptionally(otherFuture.failureCause);
+      completeExceptionally(otherFuture.failureCause);
     } else {
-        complete(otherFuture.value);
+      complete(otherFuture.value);
     }
   }
 

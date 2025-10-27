@@ -18,7 +18,6 @@ package io.zeebe.util.sched;
 
 import io.zeebe.util.sched.ActorScheduler.ActorSchedulerBuilder;
 import io.zeebe.util.sched.future.ActorFuture;
-
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -34,11 +33,11 @@ public class ActorExecutor {
   private final ThreadPoolExecutor blockingTasksRunner;
   private Duration blockingTasksShutdownTime;
 
-    public ActorExecutor(final ActorSchedulerBuilder builder) {
-        ioBoundThreads = builder.getIoBoundActorThreads();
-        cpuBoundThreads = builder.getCpuBoundActorThreads();
-        blockingTasksRunner = builder.getBlockingTasksRunner();
-        blockingTasksShutdownTime = builder.getBlockingTasksShutdownTime();
+  public ActorExecutor(final ActorSchedulerBuilder builder) {
+    ioBoundThreads = builder.getIoBoundActorThreads();
+    cpuBoundThreads = builder.getCpuBoundActorThreads();
+    blockingTasksRunner = builder.getBlockingTasksRunner();
+    blockingTasksShutdownTime = builder.getBlockingTasksShutdownTime();
   }
 
   /**
@@ -50,11 +49,11 @@ public class ActorExecutor {
     return submitTask(task, cpuBoundThreads);
   }
 
-    public ActorFuture<Void> submitIoBoundTask(final ActorTask task) {
+  public ActorFuture<Void> submitIoBoundTask(final ActorTask task) {
     return submitTask(task, ioBoundThreads);
   }
 
-    private ActorFuture<Void> submitTask(final ActorTask task, final ActorThreadGroup threadGroup) {
+  private ActorFuture<Void> submitTask(final ActorTask task, final ActorThreadGroup threadGroup) {
     final ActorFuture<Void> startingFuture = task.onTaskScheduled(this, threadGroup);
 
     threadGroup.submit(task);
@@ -103,7 +102,7 @@ public class ActorExecutor {
     return blockingTasksShutdownTime;
   }
 
-    public void setBlockingTasksShutdownTime(final Duration duration) {
+  public void setBlockingTasksShutdownTime(final Duration duration) {
     blockingTasksShutdownTime = duration;
   }
 }

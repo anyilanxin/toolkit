@@ -37,9 +37,9 @@ public class ActorControl {
 
   final ActorTask task;
 
-  public ActorControl(Actor actor) {
+  public ActorControl(final Actor actor) {
     this.actor = actor;
-    this.task = new ActorTask(actor);
+    task = new ActorTask(actor);
   }
 
   /**
@@ -48,7 +48,7 @@ public class ActorControl {
    *
    * @param hints the changed scheduling hints
    */
-  public void setSchedulingHints(int hints) {
+  public void setSchedulingHints(final int hints) {
     ensureCalledFromWithinActor("resubmit(...)");
     task.setUpdatedSchedulingHints(hints);
   }
@@ -60,7 +60,7 @@ public class ActorControl {
    * @param channel
    * @param consumer
    */
-  public ChannelSubscription consume(ConsumableChannel channel, Runnable consumer) {
+  public ChannelSubscription consume(final ConsumableChannel channel, final Runnable consumer) {
     ensureCalledFromWithinActor("consume(...)");
 
     final ActorJob job = new ActorJob();
@@ -76,7 +76,7 @@ public class ActorControl {
     return subscription;
   }
 
-  public void pollBlocking(Runnable condition, Runnable action) {
+  public void pollBlocking(final Runnable condition, final Runnable action) {
     ensureCalledFromWithinActor("pollBlocking(...)");
 
     final ActorJob job = new ActorJob();
@@ -98,7 +98,7 @@ public class ActorControl {
    * @param conditionAction
    * @return
    */
-  public ActorCondition onCondition(String conditionName, Runnable conditionAction) {
+  public ActorCondition onCondition(final String conditionName, final Runnable conditionAction) {
     ensureCalledFromWithinActor("onCondition(...)");
 
     final ActorJob job = new ActorJob();
@@ -119,7 +119,7 @@ public class ActorControl {
    * @return
    */
   @SuppressWarnings("unchecked")
-  public <T> ActorFuture<T> call(Callable<T> callable) {
+  public <T> ActorFuture<T> call(final Callable<T> callable) {
     final ActorThread runner = ActorThread.current();
     if (runner != null && runner.getCurrentTask() == task) {
       throw new UnsupportedOperationException(
@@ -142,7 +142,7 @@ public class ActorControl {
    * @param action
    * @return
    */
-  public ActorFuture<Void> call(Runnable action) {
+  public ActorFuture<Void> call(final Runnable action) {
     final Callable<Void> c =
         () -> {
           action.run();
@@ -161,7 +161,7 @@ public class ActorControl {
    *
    * @param action
    */
-  public void run(Runnable action) {
+  public void run(final Runnable action) {
     scheduleRunnable(action, true);
   }
 
@@ -170,7 +170,7 @@ public class ActorControl {
    *
    * <p>The provided runnable is executed in any of the actor's lifecycle phases.
    */
-  public void runBlocking(Runnable runnable) {
+  public void runBlocking(final Runnable runnable) {
     ensureCalledFromWithinActor("runBlocking(...)");
 
     final ActorJob noop = new ActorJob();
@@ -196,7 +196,7 @@ public class ActorControl {
    * @param runnable
    * @param completionConsumer
    */
-  public void runBlocking(Runnable runnable, Consumer<Throwable> completionConsumer) {
+  public void runBlocking(final Runnable runnable, final Consumer<Throwable> completionConsumer) {
     final RunnableAdapter<Void> adapter = RunnableAdapter.wrapRunnable(runnable);
     ensureCalledFromWithinActor("runBlocking(...)");
 
@@ -216,7 +216,7 @@ public class ActorControl {
    * Run the provided runnable repeatedly until it calls {@link #done()}. To be used for jobs which
    * may experience backpressure.
    */
-  public void runUntilDone(Runnable runnable) {
+  public void runUntilDone(final Runnable runnable) {
     ensureCalledFromWithinActor("runUntilDone(...)");
     scheduleRunnable(runnable, false);
   }
@@ -229,7 +229,7 @@ public class ActorControl {
    * @param runnable
    * @return
    */
-  public ScheduledTimer runDelayed(Duration delay, Runnable runnable) {
+  public ScheduledTimer runDelayed(final Duration delay, final Runnable runnable) {
     ensureCalledFromWithinActor("runDelayed(...)");
     return scheduleTimer(delay, false, runnable);
   }
@@ -244,12 +244,12 @@ public class ActorControl {
    *
    * @param action the action to run.
    */
-  public void submit(Runnable action) {
+  public void submit(final Runnable action) {
     final ActorThread currentActorRunner = ensureCalledFromActorThread("run(...)");
     final ActorTask currentTask = currentActorRunner.getCurrentTask();
 
     final ActorJob job;
-    if (currentTask == this.task) {
+    if (currentTask == task) {
       job = currentActorRunner.newJob();
     } else {
       job = new ActorJob();
@@ -260,8 +260,8 @@ public class ActorControl {
     job.onJobAddedToTask(task);
     task.submit(job);
 
-    if (currentTask == this.task) {
-      yield();
+    if (currentTask == task) {
+      handleYield();
     }
   }
 
@@ -275,12 +275,13 @@ public class ActorControl {
    * @param runnable
    * @return
    */
-  public ScheduledTimer runAtFixedRate(Duration delay, Runnable runnable) {
+  public ScheduledTimer runAtFixedRate(final Duration delay, final Runnable runnable) {
     ensureCalledFromWithinActor("runAtFixedRate(...)");
     return scheduleTimer(delay, true, runnable);
   }
 
-  private TimerSubscription scheduleTimer(Duration delay, boolean isRecurring, Runnable runnable) {
+  private TimerSubscription scheduleTimer(
+      final Duration delay, final boolean isRecurring, final Runnable runnable) {
     final ActorJob job = new ActorJob();
     job.setRunnable(runnable);
     job.onJobAddedToTask(task);
@@ -306,13 +307,14 @@ public class ActorControl {
    * @param callback the callback that handle the future's result. The throwable is <code>null
    *     </code> when the future is completed successfully.
    */
-  public <T> void runOnCompletion(ActorFuture<T> future, BiConsumer<T, Throwable> callback) {
+  public <T> void runOnCompletion(
+      final ActorFuture<T> future, final BiConsumer<T, Throwable> callback) {
     ensureCalledFromWithinActor("runOnCompletion(...)");
 
     final ActorLifecyclePhase lifecyclePhase = task.getLifecyclePhase();
     if (lifecyclePhase != ActorLifecyclePhase.CLOSE_REQUESTED
         && lifecyclePhase != ActorLifecyclePhase.CLOSED) {
-      this.submitContinuationJob(
+      submitContinuationJob(
           future,
           callback,
           (job) -> new ActorFutureSubscription(future, job, lifecyclePhase.getValue()));
@@ -332,12 +334,12 @@ public class ActorControl {
    *     </code> when the future is completed successfully.
    */
   public <T> void runOnCompletionBlockingCurrentPhase(
-      ActorFuture<T> future, BiConsumer<T, Throwable> callback) {
+      final ActorFuture<T> future, final BiConsumer<T, Throwable> callback) {
     ensureCalledFromWithinActor("runOnCompletionBlockingCurrentPhase(...)");
 
     final ActorLifecyclePhase lifecyclePhase = task.getLifecyclePhase();
     if (lifecyclePhase != ActorLifecyclePhase.CLOSED) {
-      this.submitContinuationJob(
+      submitContinuationJob(
           future,
           callback,
           (job) ->
@@ -350,9 +352,9 @@ public class ActorControl {
   }
 
   private <T> void submitContinuationJob(
-      ActorFuture<T> future,
-      BiConsumer<T, Throwable> callback,
-      Function<ActorJob, ActorFutureSubscription> futureSubscriptionSupplier) {
+      final ActorFuture<T> future,
+      final BiConsumer<T, Throwable> callback,
+      final Function<ActorJob, ActorFutureSubscription> futureSubscriptionSupplier) {
     final ActorJob continuationJob = new ActorJob();
     continuationJob.setRunnable(new FutureContinuationRunnable<>(future, callback));
     continuationJob.setAutoCompleting(true);
@@ -376,12 +378,12 @@ public class ActorControl {
    *     Otherwise, it holds the exception of the last completed future.
    */
   public <T> void runOnCompletion(
-      Collection<ActorFuture<T>> futures, Consumer<Throwable> callback) {
+      final Collection<ActorFuture<T>> futures, final Consumer<Throwable> callback) {
     if (!futures.isEmpty()) {
       final BiConsumer<T, Throwable> futureConsumer =
           new AllCompletedFutureConsumer<>(futures.size(), callback);
 
-      for (ActorFuture<T> future : futures) {
+      for (final ActorFuture<T> future : futures) {
         runOnCompletion(future, futureConsumer);
       }
     } else {
@@ -402,7 +404,7 @@ public class ActorControl {
    *     of the last completed future.
    */
   public <T> void runOnFirstCompletion(
-      Collection<ActorFuture<T>> futures, BiConsumer<T, Throwable> callback) {
+      final Collection<ActorFuture<T>> futures, final BiConsumer<T, Throwable> callback) {
     runOnFirstCompletion(futures, callback, null);
   }
 
@@ -421,19 +423,21 @@ public class ActorControl {
    *     completed
    */
   public <T> void runOnFirstCompletion(
-      Collection<ActorFuture<T>> futures, BiConsumer<T, Throwable> callback, Consumer<T> closer) {
+      final Collection<ActorFuture<T>> futures,
+      final BiConsumer<T, Throwable> callback,
+      final Consumer<T> closer) {
     final BiConsumer<T, Throwable> futureConsumer =
         new FirstSuccessfullyCompletedFutureConsumer<>(futures.size(), callback, closer);
 
-    for (ActorFuture<T> future : futures) {
+    for (final ActorFuture<T> future : futures) {
       runOnCompletion(future, futureConsumer);
     }
   }
 
   /** can be called by the actor to yield the thread */
-  public void yield() {
-    final ActorJob job = ensureCalledFromWithinActor("yield()");
-    job.getTask().yield();
+  public void handleYield() {
+    final ActorJob job = ensureCalledFromWithinActor("handleYield()");
+    job.getTask().handleYield();
   }
 
   public ActorFuture<Void> close() {
@@ -448,10 +452,10 @@ public class ActorControl {
     return task.closeFuture;
   }
 
-  private void scheduleRunnable(Runnable runnable, boolean autocompleting) {
+  private void scheduleRunnable(final Runnable runnable, final boolean autocompleting) {
     final ActorThread currentActorThread = ActorThread.current();
 
-    if (currentActorThread != null && currentActorThread.getCurrentTask() == this.task) {
+    if (currentActorThread != null && currentActorThread.getCurrentTask() == task) {
       final ActorJob newJob = currentActorThread.newJob();
       newJob.setRunnable(runnable);
       newJob.setAutoCompleting(autocompleting);
@@ -476,7 +480,7 @@ public class ActorControl {
     return task.isClosing();
   }
 
-  public void setPriority(ActorPriority priority) {
+  public void setPriority(final ActorPriority priority) {
     ensureCalledFromActorThread("setPriority()");
     task.setPriority(priority.getPriorityClass());
   }
@@ -486,11 +490,11 @@ public class ActorControl {
     return task.getLifecyclePhase();
   }
 
-  public boolean isCalledFromWithinActor(ActorJob job) {
+  public boolean isCalledFromWithinActor(final ActorJob job) {
     return job != null && job.getActor() == actor;
   }
 
-  private ActorJob ensureCalledFromWithinActor(String methodName) {
+  private ActorJob ensureCalledFromWithinActor(final String methodName) {
     final ActorJob currentJob = ensureCalledFromActorThread(methodName).getCurrentJob();
     if (!isCalledFromWithinActor(currentJob)) {
       throw new UnsupportedOperationException(
@@ -502,7 +506,7 @@ public class ActorControl {
     return currentJob;
   }
 
-  private ActorThread ensureCalledFromActorThread(String methodName) {
+  private ActorThread ensureCalledFromActorThread(final String methodName) {
     final ActorThread thread = ActorThread.current();
 
     if (thread == null) {

@@ -29,7 +29,7 @@ public class UnpackedObject extends ObjectValue implements Recyclable, BufferRea
   protected final MsgPackReader reader = new MsgPackReader();
   protected final MsgPackWriter writer = new MsgPackWriter();
 
-    public void wrap(final DirectBuffer buff) {
+  public void wrap(final DirectBuffer buff) {
     wrap(buff, 0, buff.capacity());
   }
 

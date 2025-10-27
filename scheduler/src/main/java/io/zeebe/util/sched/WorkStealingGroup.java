@@ -16,18 +16,18 @@
  */
 package io.zeebe.util.sched;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import static io.zeebe.util.sched.ActorTask.TaskSchedulingState.QUEUED;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /** Workstealing group maintains a queue per thread. */
 public class WorkStealingGroup {
   private final int numOfThreads;
   private final ActorTaskQueue[] taskQueues;
 
-    public WorkStealingGroup(final int numOfThreads) {
+  public WorkStealingGroup(final int numOfThreads) {
     this.numOfThreads = numOfThreads;
-        taskQueues = new ActorTaskQueue[numOfThreads];
+    taskQueues = new ActorTaskQueue[numOfThreads];
     for (int i = 0; i < numOfThreads; i++) {
       taskQueues[i] = new ActorTaskQueue();
     }

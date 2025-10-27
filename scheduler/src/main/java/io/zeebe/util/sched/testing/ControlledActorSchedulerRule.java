@@ -23,12 +23,11 @@ import io.zeebe.util.sched.clock.ActorClock;
 import io.zeebe.util.sched.clock.ControlledActorClock;
 import io.zeebe.util.sched.future.ActorFuture;
 import io.zeebe.util.sched.future.CompletableActorFuture;
-import org.junit.Assert;
-import org.junit.rules.ExternalResource;
-
 import java.time.Duration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadPoolExecutor;
+import org.junit.Assert;
+import org.junit.rules.ExternalResource;
 
 public class ControlledActorSchedulerRule extends ExternalResource {
   private final ActorScheduler actorScheduler;
@@ -63,7 +62,7 @@ public class ControlledActorSchedulerRule extends ExternalResource {
     actorScheduler.stop();
   }
 
-    public ActorFuture<Void> submitActor(final Actor actor) {
+  public ActorFuture<Void> submitActor(final Actor actor) {
     return actorScheduler.submitActor(actor);
   }
 
@@ -71,7 +70,7 @@ public class ControlledActorSchedulerRule extends ExternalResource {
     return actorScheduler;
   }
 
-    public void awaitBlockingTasksCompleted(final int i) {
+  public void awaitBlockingTasksCompleted(final int i) {
     final long currentTimeMillis = System.currentTimeMillis();
 
     while (System.currentTimeMillis() - currentTimeMillis < 5000) {
@@ -88,7 +87,7 @@ public class ControlledActorSchedulerRule extends ExternalResource {
     controlledActorTaskRunner.workUntilDone();
   }
 
-    public <T> ActorFuture<T> call(final Callable<T> callable) {
+  public <T> ActorFuture<T> call(final Callable<T> callable) {
     final ActorFuture<T> future = new CompletableActorFuture<>();
     submitActor(new CallingActor(future, callable));
     return future;
@@ -98,7 +97,7 @@ public class ControlledActorSchedulerRule extends ExternalResource {
     private final ActorFuture<T> future;
     private final Callable<T> callable;
 
-      CallingActor(final ActorFuture<T> future, final Callable<T> callable) {
+    CallingActor(final ActorFuture<T> future, final Callable<T> callable) {
       this.future = future;
       this.callable = callable;
     }
@@ -121,12 +120,12 @@ public class ControlledActorSchedulerRule extends ExternalResource {
 
     @Override
     public ActorThread newThread(
-            final String name,
-            final int id,
-            final ActorThreadGroup threadGroup,
-            final TaskScheduler taskScheduler,
-            final ActorClock clock,
-            final ActorTimerQueue timerQueue) {
+        final String name,
+        final int id,
+        final ActorThreadGroup threadGroup,
+        final TaskScheduler taskScheduler,
+        final ActorClock clock,
+        final ActorTimerQueue timerQueue) {
       controlledThread =
           new ControlledActorThread(name, id, threadGroup, taskScheduler, clock, timerQueue);
       return controlledThread;

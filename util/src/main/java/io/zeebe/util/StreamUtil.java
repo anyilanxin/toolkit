@@ -16,9 +16,8 @@
  */
 package io.zeebe.util;
 
-import org.agrona.BitUtil;
-import org.agrona.DirectBuffer;
-import org.agrona.MutableDirectBuffer;
+import static io.zeebe.util.StringUtil.fromBytes;
+import static io.zeebe.util.StringUtil.getBytes;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -27,9 +26,9 @@ import java.nio.channels.WritableByteChannel;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import static io.zeebe.util.StringUtil.fromBytes;
-import static io.zeebe.util.StringUtil.getBytes;
+import org.agrona.BitUtil;
+import org.agrona.DirectBuffer;
+import org.agrona.MutableDirectBuffer;
 
 public class StreamUtil {
   protected static final int DEFAULT_BUFFER_SIZE = 4 * 1024;
@@ -82,7 +81,7 @@ public class StreamUtil {
   }
 
   public static void write(final File file, final String data) throws IOException {
-      try (final FileOutputStream os = new FileOutputStream(file)) {
+    try (final FileOutputStream os = new FileOutputStream(file)) {
       os.write(getBytes(data));
     }
   }
@@ -90,7 +89,7 @@ public class StreamUtil {
   public static void write(
       final File file, final InputStream data, final MessageDigest messageDigest)
       throws IOException {
-      try (final DigestOutputStream os =
+    try (final DigestOutputStream os =
         new DigestOutputStream(new FileOutputStream(file), messageDigest)) {
       copy(data, os);
     }
@@ -156,7 +155,7 @@ public class StreamUtil {
     final byte[] byteBuffer = new byte[DEFAULT_BUFFER_SIZE];
     int readBytes;
 
-      try (final ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+    try (final ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
       while ((readBytes = input.read(byteBuffer, 0, byteBuffer.length)) != -1) {
         buffer.write(byteBuffer, 0, readBytes);
       }
@@ -205,7 +204,8 @@ public class StreamUtil {
     }
   }
 
-    public static void writeLong(final OutputStream outputStream, final long longValue) throws IOException {
+  public static void writeLong(final OutputStream outputStream, final long longValue)
+      throws IOException {
     outputStream.write((byte) longValue);
     outputStream.write((byte) (longValue >>> 8));
     outputStream.write((byte) (longValue >>> 16));
@@ -216,7 +216,7 @@ public class StreamUtil {
     outputStream.write((byte) (longValue >>> 56));
   }
 
-    public static long readLong(final InputStream inputStream) throws IOException {
+  public static long readLong(final InputStream inputStream) throws IOException {
     long value = inputStream.read();
     value += ((long) inputStream.read() << 8);
     value += ((long) inputStream.read() << 16);

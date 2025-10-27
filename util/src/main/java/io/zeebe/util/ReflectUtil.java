@@ -18,7 +18,7 @@ package io.zeebe.util;
 
 public class ReflectUtil {
 
-    public static <T> T newInstance(final Class<T> clazz) {
+  public static <T> T newInstance(final Class<T> clazz) {
     try {
       return clazz.newInstance();
     } catch (final Exception e) {

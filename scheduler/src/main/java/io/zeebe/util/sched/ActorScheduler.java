@@ -18,7 +18,6 @@ package io.zeebe.util.sched;
 
 import io.zeebe.util.sched.clock.ActorClock;
 import io.zeebe.util.sched.future.ActorFuture;
-
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.concurrent.*;
@@ -29,7 +28,7 @@ public class ActorScheduler {
   private final AtomicReference<SchedulerState> state = new AtomicReference<>();
   private final ActorExecutor actorTaskExecutor;
 
-    public ActorScheduler(final ActorSchedulerBuilder builder) {
+  public ActorScheduler(final ActorSchedulerBuilder builder) {
     state.set(SchedulerState.NEW);
     actorTaskExecutor = builder.getActorExecutor();
   }
@@ -95,7 +94,7 @@ public class ActorScheduler {
     }
   }
 
-    public void setBlockingTasksShutdownTime(final Duration shutdownTime) {
+  public void setBlockingTasksShutdownTime(final Duration shutdownTime) {
     actorTaskExecutor.setBlockingTasksShutdownTime(shutdownTime);
   }
 
@@ -125,37 +124,39 @@ public class ActorScheduler {
 
     private ActorTimerQueue actorTimerQueue;
 
-      public ActorSchedulerBuilder setActorTimerQueue(final ActorTimerQueue actorTimerQueue) {
+    public ActorSchedulerBuilder setActorTimerQueue(final ActorTimerQueue actorTimerQueue) {
       this.actorTimerQueue = actorTimerQueue;
       return this;
     }
 
-      public ActorSchedulerBuilder setActorClock(final ActorClock actorClock) {
+    public ActorSchedulerBuilder setActorClock(final ActorClock actorClock) {
       this.actorClock = actorClock;
       return this;
     }
 
-      public ActorSchedulerBuilder setCpuBoundActorThreadCount(final int actorThreadCount) {
-          cpuBoundThreadsCount = actorThreadCount;
+    public ActorSchedulerBuilder setCpuBoundActorThreadCount(final int actorThreadCount) {
+      cpuBoundThreadsCount = actorThreadCount;
       return this;
     }
 
-      public ActorSchedulerBuilder setIoBoundActorThreadCount(final int ioBoundActorsThreadCount) {
-          ioBoundThreadsCount = ioBoundActorsThreadCount;
+    public ActorSchedulerBuilder setIoBoundActorThreadCount(final int ioBoundActorsThreadCount) {
+      ioBoundThreadsCount = ioBoundActorsThreadCount;
       return this;
     }
 
-      public ActorSchedulerBuilder setActorThreadFactory(final ActorThreadFactory actorThreadFactory) {
+    public ActorSchedulerBuilder setActorThreadFactory(
+        final ActorThreadFactory actorThreadFactory) {
       this.actorThreadFactory = actorThreadFactory;
       return this;
     }
 
-      public ActorSchedulerBuilder setBlockingTasksShutdownTime(final Duration blockingTasksShutdownTime) {
+    public ActorSchedulerBuilder setBlockingTasksShutdownTime(
+        final Duration blockingTasksShutdownTime) {
       this.blockingTasksShutdownTime = blockingTasksShutdownTime;
       return this;
     }
 
-      public ActorSchedulerBuilder setSchedulerName(final String schedulerName) {
+    public ActorSchedulerBuilder setSchedulerName(final String schedulerName) {
       this.schedulerName = schedulerName;
       return this;
     }
@@ -268,12 +269,12 @@ public class ActorScheduler {
   public static class DefaultActorThreadFactory implements ActorThreadFactory {
     @Override
     public ActorThread newThread(
-            final String name,
-            final int id,
-            final ActorThreadGroup threadGroup,
-            final TaskScheduler taskScheduler,
-            final ActorClock clock,
-            final ActorTimerQueue timerQueue) {
+        final String name,
+        final int id,
+        final ActorThreadGroup threadGroup,
+        final TaskScheduler taskScheduler,
+        final ActorClock clock,
+        final ActorTimerQueue timerQueue) {
       return new ActorThread(name, id, threadGroup, taskScheduler, clock, timerQueue);
     }
   }
@@ -282,7 +283,7 @@ public class ActorScheduler {
     final AtomicLong idGenerator = new AtomicLong();
     private final String schedulerName;
 
-      public BlockingTasksThreadFactory(final String schedulerName) {
+    public BlockingTasksThreadFactory(final String schedulerName) {
       this.schedulerName = schedulerName;
     }
 

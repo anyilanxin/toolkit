@@ -19,7 +19,6 @@ package io.zeebe.util.sched;
 import io.zeebe.util.sched.ActorTask.TaskSchedulingState;
 import io.zeebe.util.sched.future.ActorFuture;
 import io.zeebe.util.sched.future.CompletableActorFuture;
-
 import java.util.concurrent.Callable;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
@@ -41,14 +40,14 @@ public class ActorJob {
 
   private ActorSubscription subscription;
 
-    public void onJobAddedToTask(final ActorTask task) {
-        actor = task.actor;
+  public void onJobAddedToTask(final ActorTask task) {
+    actor = task.actor;
     this.task = task;
-        schedulingState = TaskSchedulingState.QUEUED;
+    schedulingState = TaskSchedulingState.QUEUED;
   }
 
-    void execute(final ActorThread runner) {
-        actorThread = runner;
+  void execute(final ActorThread runner) {
+    actorThread = runner;
     try {
       invoke();
 
@@ -60,7 +59,7 @@ public class ActorJob {
     } catch (final Throwable e) {
       task.onFailure(e);
     } finally {
-        actorThread = null;
+      actorThread = null;
 
       // in any case, success or exception, decide if the job should be resubmitted
       if (isTriggeredBySubscription() || (isAutoCompleting && runnable == null) || isDoneCalled) {
@@ -78,10 +77,10 @@ public class ActorJob {
       if (!isTriggeredBySubscription()) {
         // TODO: preempt after fixed number of iterations
         while (runnable != null && !task.shouldYield && !isDoneCalled) {
-            final Runnable r = runnable;
+          final Runnable r = runnable;
 
           if (isAutoCompleting) {
-              runnable = null;
+            runnable = null;
           }
 
           r.run();
@@ -92,11 +91,11 @@ public class ActorJob {
     }
   }
 
-    public void setRunnable(final Runnable runnable) {
+  public void setRunnable(final Runnable runnable) {
     this.runnable = runnable;
   }
 
-    public ActorFuture setCallable(final Callable<?> callable) {
+  public ActorFuture setCallable(final Callable<?> callable) {
     this.callable = callable;
     setResultFuture(new CompletableActorFuture<>());
     return resultFuture;
@@ -130,7 +129,7 @@ public class ActorJob {
     isDoneCalled = true;
   }
 
-    public void setAutoCompleting(final boolean isAutoCompleting) {
+  public void setAutoCompleting(final boolean isAutoCompleting) {
     this.isAutoCompleting = isAutoCompleting;
   }
 
@@ -154,7 +153,7 @@ public class ActorJob {
     return subscription != null;
   }
 
-    public void setSubscription(final ActorSubscription subscription) {
+  public void setSubscription(final ActorSubscription subscription) {
     this.subscription = subscription;
     task.addSubscription(subscription);
   }
@@ -171,17 +170,17 @@ public class ActorJob {
     return actor;
   }
 
-    public void setResultFuture(final ActorFuture resultFuture) {
+  public void setResultFuture(final ActorFuture resultFuture) {
     assert !resultFuture.isDone();
     this.resultFuture = resultFuture;
   }
 
-    public void failFuture(final String reason) {
+  public void failFuture(final String reason) {
     failFuture(new RuntimeException(reason));
   }
 
-    public void failFuture(final Throwable cause) {
-        if (resultFuture != null) {
+  public void failFuture(final Throwable cause) {
+    if (resultFuture != null) {
       resultFuture.completeExceptionally(cause);
     }
   }

@@ -19,15 +19,15 @@ package io.zeebe.msgpack;
 public class MsgpackException extends RuntimeException {
   public MsgpackException() {}
 
-    public MsgpackException(final String message) {
+  public MsgpackException(final String message) {
     super(message);
   }
 
-    public MsgpackException(final String message, final Throwable cause) {
+  public MsgpackException(final String message, final Throwable cause) {
     super(message, cause);
   }
 
-    public MsgpackException(final Throwable cause) {
+  public MsgpackException(final Throwable cause) {
     super(cause);
   }
 }
