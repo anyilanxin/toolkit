@@ -21,6 +21,7 @@ import static com.anyilanxin.toolkit.rocksdb.impl.rocksdb.transaction.RocksDbInt
 import com.anyilanxin.toolkit.rocksdb.TransactionOperation;
 import com.anyilanxin.toolkit.rocksdb.ZeebeDbException;
 import com.anyilanxin.toolkit.rocksdb.ZeebeDbTransaction;
+import org.agrona.LangUtil;
 import org.rocksdb.*;
 
 public class ZeebeTransaction implements ZeebeDbTransaction, AutoCloseable {
@@ -41,12 +42,36 @@ public class ZeebeTransaction implements ZeebeDbTransaction, AutoCloseable {
   public void put(
       final long columnFamilyHandle,
       final byte[] key,
+      final int keyOffset,
+      final int keyLength,
+      final byte[] value,
+      final int valueOffset,
+      final int valueLength)
+      throws Exception {
+    try {
+      RocksDbInternal.putWithHandle.invokeExact(
+          nativeHandle,
+          key,
+          keyOffset,
+          keyLength,
+          value,
+          valueOffset,
+          valueLength,
+          columnFamilyHandle,
+          false);
+    } catch (final Throwable e) {
+      LangUtil.rethrowUnchecked(e);
+    }
+  }
+
+  public void put(
+      final long columnFamilyHandle,
+      final byte[] key,
       final int keyLength,
       final byte[] value,
       final int valueLength)
       throws Exception {
-    RocksDbInternal.putWithHandle.invoke(
-        transaction, nativeHandle, key, keyLength, value, valueLength, columnFamilyHandle, false);
+    put(columnFamilyHandle, key, 0, keyLength, value, 0, valueLength);
   }
 
   public byte[] get(
@@ -55,15 +80,42 @@ public class ZeebeTransaction implements ZeebeDbTransaction, AutoCloseable {
       final byte[] key,
       final int keyLength)
       throws Exception {
-    return (byte[])
-        RocksDbInternal.getWithHandle.invoke(
-            transaction, nativeHandle, readOptionsHandle, key, keyLength, columnFamilyHandle);
+    try {
+      final int keyOffset = 0;
+      return (byte[])
+          RocksDbInternal.getWithHandle.invokeExact(
+              nativeHandle, readOptionsHandle, key, keyOffset, keyLength, columnFamilyHandle);
+    } catch (final Throwable e) {
+      LangUtil.rethrowUnchecked(e);
+      return null;
+    }
+  }
+
+  public byte[] get(
+      final long columnFamilyHandle,
+      final long readOptionsHandle,
+      final byte[] key,
+      final int keyOffset,
+      final int keyLength)
+      throws Exception {
+    try {
+      return (byte[])
+          RocksDbInternal.getWithHandle.invokeExact(
+              nativeHandle, readOptionsHandle, key, keyOffset, keyLength, columnFamilyHandle);
+    } catch (final Throwable e) {
+      LangUtil.rethrowUnchecked(e);
+      return null;
+    }
   }
 
   public void delete(final long columnFamilyHandle, final byte[] key, final int keyLength)
       throws Exception {
-    RocksDbInternal.removeWithHandle.invoke(
-        transaction, nativeHandle, key, keyLength, columnFamilyHandle, false);
+    try {
+      RocksDbInternal.removeWithHandle.invokeExact(
+          nativeHandle, key, keyLength, columnFamilyHandle, false);
+    } catch (final Throwable e) {
+      LangUtil.rethrowUnchecked(e);
+    }
   }
 
   public RocksIterator newIterator(final ReadOptions options, final ColumnFamilyHandle handle) {

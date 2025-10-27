@@ -18,24 +18,23 @@ package com.anyilanxin.toolkit.rocksdb.impl.rocksdb.transaction;
 
 import static org.rocksdb.Status.Code.*;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.EnumSet;
 import org.rocksdb.*;
 import org.rocksdb.Status.Code;
 
-public class RocksDbInternal {
+public final class RocksDbInternal {
+
   static final EnumSet<Code> RECOVERABLE_ERROR_CODES =
       EnumSet.of(Ok, Aborted, Expired, IOError, Busy, TimedOut, TryAgain, MergeInProgress);
 
   static Field nativeHandle;
 
-  static Method putWithHandle;
-  static Method getWithHandle;
-  static Method removeWithHandle;
-
-  static Method seekMethod;
+  static MethodHandle putWithHandle;
+  static MethodHandle getWithHandle;
+  static MethodHandle removeWithHandle;
 
   static {
     RocksDB.loadLibrary();
@@ -53,8 +52,6 @@ public class RocksDbInternal {
     putWithHandle();
     getWithHandle();
     removeWithHandle();
-
-    seekWithHandle();
   }
 
   private static void nativeHandles() throws NoSuchFieldException {
@@ -62,59 +59,58 @@ public class RocksDbInternal {
     nativeHandle.setAccessible(true);
   }
 
-  //    private native void put(final long handle, final byte[] key,
-  //      final int keyLength, final byte[] value, final int valueLength,
-  //      final long columnFamilyHandle)
-
+  /*
+   private native void put(final long handle, final byte[] key, final int keyOffset,
+        final int keyLength, final byte[] value, final int valueOffset, final int valueLength,
+        final long columnFamilyHandle, final boolean assumeTracked) throws RocksDBException;
+  */
   private static void putWithHandle() throws NoSuchMethodException {
-    putWithHandle =
+    final var method =
         Transaction.class.getDeclaredMethod(
             "put",
             Long.TYPE,
             byte[].class,
             Integer.TYPE,
+            Integer.TYPE,
             byte[].class,
+            Integer.TYPE,
             Integer.TYPE,
             Long.TYPE,
             Boolean.TYPE);
-    putWithHandle.setAccessible(true);
+    method.setAccessible(true);
+    try {
+      putWithHandle = MethodHandles.lookup().unreflect(method);
+    } catch (final IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  //    private native byte[] get(final long handle, final long readOptionsHandle,
-  //      final byte key[], final int keyLength, final long columnFamilyHandle)
-
+  /*
+   private native byte[] get(final long handle, final long readOptionsHandle, final byte[] key,
+      final int keyOffset, final int keyLength, final long columnFamilyHandle)
+      throws RocksDBException;
+  */
   private static void getWithHandle() throws NoSuchMethodException {
-    getWithHandle =
+    final var method =
         Transaction.class.getDeclaredMethod(
-            "get", Long.TYPE, Long.TYPE, byte[].class, Integer.TYPE, Long.TYPE);
-    getWithHandle.setAccessible(true);
+            "get", Long.TYPE, Long.TYPE, byte[].class, Integer.TYPE, Integer.TYPE, Long.TYPE);
+    method.setAccessible(true);
+    try {
+      getWithHandle = MethodHandles.lookup().unreflect(method);
+    } catch (final IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
   }
-
-  //    private native void delete(final long handle, final byte[] key,
-  //      final int keyLength, final long columnFamilyHandle)
 
   private static void removeWithHandle() throws NoSuchMethodException {
-    removeWithHandle =
+    final var method =
         Transaction.class.getDeclaredMethod(
             "delete", Long.TYPE, byte[].class, Integer.TYPE, Long.TYPE, Boolean.TYPE);
-    removeWithHandle.setAccessible(true);
-  }
-
-  private static void seekWithHandle() throws NoSuchMethodException {
-    seekMethod =
-        RocksIterator.class.getDeclaredMethod("seek0", long.class, byte[].class, int.class);
-    seekMethod.setAccessible(true);
-  }
-
-  public static void seek(
-      final RocksIterator iterator,
-      final long nativeHandle,
-      final byte[] target,
-      final int targetLength) {
+    method.setAccessible(true);
     try {
-      seekMethod.invoke(iterator, nativeHandle, target, targetLength);
-    } catch (final IllegalAccessException | InvocationTargetException e) {
-      throw new RuntimeException("Unexpected error occurred trying to seek with RocksIterator", e);
+      removeWithHandle = MethodHandles.lookup().unreflect(method);
+    } catch (final IllegalAccessException e) {
+      throw new RuntimeException(e);
     }
   }
 

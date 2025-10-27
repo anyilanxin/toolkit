@@ -19,6 +19,7 @@ package com.anyilanxin.toolkit.rocksdb.impl.rocksdb.transaction;
 import static com.anyilanxin.toolkit.util.buffer.BufferUtil.startsWith;
 
 import com.anyilanxin.toolkit.rocksdb.*;
+import com.anyilanxin.toolkit.rocksdb.impl.RocksDbConfiguration;
 import com.anyilanxin.toolkit.rocksdb.impl.rocksdb.Loggers;
 import java.io.File;
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class ZeebeTransactionDb<ColumnFamilyNames extends Enum<ColumnFamilyNames
           final String path,
           final List<ColumnFamilyDescriptor> columnFamilyDescriptors,
           final List<AutoCloseable> closables,
+          final RocksDbConfiguration rocksDbConfiguration,
           final Class<ColumnFamilyNames> columnFamilyTypeClass)
           throws RocksDBException {
     final EnumMap<ColumnFamilyNames, Long> columnFamilyMap = new EnumMap<>(columnFamilyTypeClass);
@@ -65,7 +67,7 @@ public class ZeebeTransactionDb<ColumnFamilyNames extends Enum<ColumnFamilyNames
     }
 
     return new ZeebeTransactionDb<>(
-        optimisticTransactionDB, columnFamilyMap, handleToEnumMap, closables);
+        optimisticTransactionDB, columnFamilyMap, handleToEnumMap, closables, rocksDbConfiguration);
   }
 
   private static long getNativeHandle(final RocksObject object) {
@@ -91,17 +93,19 @@ public class ZeebeTransactionDb<ColumnFamilyNames extends Enum<ColumnFamilyNames
       final OptimisticTransactionDB optimisticTransactionDB,
       final EnumMap<ColumnFamilyNames, Long> columnFamilyMap,
       final Long2ObjectHashMap<ColumnFamilyHandle> handelToEnumMap,
-      final List<AutoCloseable> closables) {
+      final List<AutoCloseable> closables,
+      final RocksDbConfiguration rocksDbConfiguration) {
     this.optimisticTransactionDB = optimisticTransactionDB;
     this.columnFamilyMap = columnFamilyMap;
     this.handelToEnumMap = handelToEnumMap;
     this.closables = closables;
 
-    prefixReadOptions = new ReadOptions().setPrefixSameAsStart(true).setTotalOrderSeek(false);
+    prefixReadOptions =
+        new ReadOptions().setPrefixSameAsStart(true).setTotalOrderSeek(false).setReadaheadSize(0);
     closables.add(prefixReadOptions);
     defaultReadOptions = new ReadOptions();
     closables.add(defaultReadOptions);
-    defaultWriteOptions = new WriteOptions();
+    defaultWriteOptions = new WriteOptions().setDisableWAL(rocksDbConfiguration.isWalDisabled());
     closables.add(defaultWriteOptions);
   }
 
@@ -313,15 +317,8 @@ public class ZeebeTransactionDb<ColumnFamilyNames extends Enum<ColumnFamilyNames
                   try (final RocksIterator iterator =
                       newIterator(columnFamilyHandle, context, prefixReadOptions)) {
                     prefix.write(prefixKeyBuffer, 0);
-                    final int prefixLength = prefix.getLength();
-
                     boolean shouldVisitNext = true;
-
-                    for (RocksDbInternal.seek(
-                            iterator,
-                            getNativeHandle(iterator),
-                            prefixKeyBuffer.byteArray(),
-                            prefixLength);
+                    for (iterator.seek(prefixKeyBuffer.byteArray());
                         iterator.isValid() && shouldVisitNext;
                         iterator.next()) {
                       final byte[] keyBytes = iterator.key();
