@@ -16,6 +16,12 @@
  */
 package com.anyilanxin.toolkit.msgpack.value;
 
+import java.util.stream.Stream;
+
 public interface ValueArray<T> extends Iterable<T> {
-  T add();
+    T add();
+
+    T add(final int index);
+
+    Stream<T> stream();
 }

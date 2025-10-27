@@ -20,32 +20,58 @@ import com.anyilanxin.toolkit.msgpack.MsgpackPropertyException;
 import com.anyilanxin.toolkit.msgpack.value.ArrayValue;
 import com.anyilanxin.toolkit.msgpack.value.BaseValue;
 import com.anyilanxin.toolkit.msgpack.value.ValueArray;
+
 import java.util.Iterator;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
-public class ArrayProperty<T extends BaseValue> extends BaseProperty<ArrayValue<T>>
-    implements ValueArray<T> {
-  public ArrayProperty(final String keyString, final T innerValue) {
-    super(keyString, new ArrayValue<>(innerValue));
-    isSet = true;
-  }
-
-  @Override
-  public void reset() {
-    super.reset();
-    isSet = true;
-  }
-
-  @Override
-  public Iterator<T> iterator() {
-    return resolveValue().iterator();
-  }
-
-  @Override
-  public T add() {
-    try {
-      return value.add();
-    } catch (final Exception e) {
-      throw new MsgpackPropertyException(getKey(), e);
+public final class ArrayProperty<T extends BaseValue> extends BaseProperty<ArrayValue<T>>
+        implements ValueArray<T> {
+    public ArrayProperty(final String keyString, final Supplier<T> innerValueFactory) {
+        super(keyString, new ArrayValue<>(innerValueFactory));
+        isSet = true;
     }
-  }
+
+    @Override
+    public void reset() {
+        super.reset();
+        isSet = true;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return resolveValue().iterator();
+    }
+
+    @Override
+    public T add() {
+        try {
+            return value.add();
+        } catch (final Exception e) {
+            throw new MsgpackPropertyException(getKey(), e);
+        }
+    }
+
+    @Override
+    public T add(final int index) {
+        try {
+            return value.add(index);
+        } catch (final Exception e) {
+            throw new MsgpackPropertyException(getKey(), e);
+        }
+    }
+
+    @Override
+    public Stream<T> stream() {
+        return StreamSupport.stream(spliterator(), false);
+    }
+
+    public boolean isEmpty() {
+        return value.isEmpty();
+    }
+
+    public int size() {
+        return value.size();
+    }
 }
