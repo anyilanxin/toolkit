@@ -78,8 +78,8 @@ public class ActorConditions {
     // please do not remove me, array ref may be replaced concurrently
     final ActorCondition[] consumer = arrayRef.get();
 
-    for (int i = 0; i < consumer.length; i++) {
-      consumer[i].signal();
+    for (final ActorCondition actorCondition : consumer) {
+      actorCondition.signal();
     }
   }
 

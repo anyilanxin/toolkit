@@ -19,28 +19,27 @@ package com.anyilanxin.toolkit.scheduler.retry;
 import com.anyilanxin.toolkit.scheduler.ActorControl;
 import com.anyilanxin.toolkit.scheduler.future.ActorFuture;
 import com.anyilanxin.toolkit.scheduler.future.CompletableActorFuture;
-
 import java.util.function.BooleanSupplier;
 
-public class AbortableRetryStrategy implements com.anyilanxin.toolkit.scheduler.retry.RetryStrategy {
+public class AbortableRetryStrategy implements RetryStrategy {
 
   private final ActorControl actor;
-    private final com.anyilanxin.toolkit.scheduler.retry.ActorRetryMechanism retryMechanism;
+  private final ActorRetryMechanism retryMechanism;
   private CompletableActorFuture<Boolean> currentFuture;
 
   public AbortableRetryStrategy(final ActorControl actor) {
     this.actor = actor;
-      retryMechanism = new com.anyilanxin.toolkit.scheduler.retry.ActorRetryMechanism(actor);
+    retryMechanism = new ActorRetryMechanism(actor);
   }
 
   @Override
-  public ActorFuture<Boolean> runWithRetry(final com.anyilanxin.toolkit.scheduler.retry.OperationToRetry callable) {
+  public ActorFuture<Boolean> runWithRetry(final OperationToRetry callable) {
     return runWithRetry(callable, () -> false);
   }
 
   @Override
   public ActorFuture<Boolean> runWithRetry(
-          final com.anyilanxin.toolkit.scheduler.retry.OperationToRetry callable, final BooleanSupplier condition) {
+      final OperationToRetry callable, final BooleanSupplier condition) {
     currentFuture = new CompletableActorFuture<>();
     retryMechanism.wrap(callable, condition, currentFuture);
 

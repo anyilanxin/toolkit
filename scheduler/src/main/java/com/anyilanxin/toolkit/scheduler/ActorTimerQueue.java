@@ -17,10 +17,9 @@
 package com.anyilanxin.toolkit.scheduler;
 
 import com.anyilanxin.toolkit.scheduler.clock.ActorClock;
+import java.util.concurrent.TimeUnit;
 import org.agrona.DeadlineTimerWheel;
 import org.agrona.collections.Long2ObjectHashMap;
-
-import java.util.concurrent.TimeUnit;
 
 public class ActorTimerQueue extends DeadlineTimerWheel {
   private static final int DEFAULT_TICKS_PER_WHEEL = 32;
@@ -40,15 +39,15 @@ public class ActorTimerQueue extends DeadlineTimerWheel {
         }
       };
 
-    public ActorTimerQueue(final ActorClock clock) {
+  public ActorTimerQueue(final ActorClock clock) {
     this(clock, DEFAULT_TICKS_PER_WHEEL);
   }
 
-    public ActorTimerQueue(final ActorClock clock, final int ticksPerWheel) {
+  public ActorTimerQueue(final ActorClock clock, final int ticksPerWheel) {
     super(TimeUnit.MILLISECONDS, clock.getTimeMillis(), 1, ticksPerWheel);
   }
 
-    public void processExpiredTimers(final ActorClock clock) {
+  public void processExpiredTimers(final ActorClock clock) {
     int timersProcessed = 0;
 
     do {
@@ -56,7 +55,7 @@ public class ActorTimerQueue extends DeadlineTimerWheel {
     } while (timersProcessed > 0);
   }
 
-    public void schedule(final TimerSubscription timer, final ActorClock now) {
+  public void schedule(final TimerSubscription timer, final ActorClock now) {
     final long deadline =
         now.getTimeMillis() + timeUnit().convert(timer.getDeadline(), timer.getTimeUnit());
 
@@ -66,7 +65,7 @@ public class ActorTimerQueue extends DeadlineTimerWheel {
     timerJobMap.put(timerId, timer);
   }
 
-    public void remove(final TimerSubscription timer) {
+  public void remove(final TimerSubscription timer) {
     final long timerId = timer.getTimerId();
 
     timerJobMap.remove(timerId);

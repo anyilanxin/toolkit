@@ -20,7 +20,6 @@ import com.anyilanxin.toolkit.scheduler.ActorControl;
 import com.anyilanxin.toolkit.scheduler.future.ActorFuture;
 import com.anyilanxin.toolkit.scheduler.future.CompletableActorFuture;
 import com.anyilanxin.toolkit.util.exception.RecoverableException;
-
 import java.util.function.BooleanSupplier;
 
 public class RecoverableRetryStrategy implements RetryStrategy {

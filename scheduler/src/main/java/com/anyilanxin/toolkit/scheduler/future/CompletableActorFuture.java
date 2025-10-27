@@ -16,11 +16,11 @@
  */
 package com.anyilanxin.toolkit.scheduler.future;
 
-import static org.agrona.UnsafeAccess.UNSAFE;
-
 import com.anyilanxin.toolkit.scheduler.ActorTask;
 import com.anyilanxin.toolkit.scheduler.ActorThread;
 import com.anyilanxin.toolkit.scheduler.FutureUtil;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -32,8 +32,7 @@ import org.agrona.concurrent.ManyToOneConcurrentLinkedQueue;
 /** Completable future implementation that is garbage free and reusable */
 @SuppressWarnings("restriction")
 public class CompletableActorFuture<V> implements ActorFuture<V> {
-  private static final long STATE_OFFSET;
-
+  private static final VarHandle STATE_VAR_HANDLE;
   private static final int AWAITING_RESULT = 1;
   private static final int COMPLETING = 2;
   private static final int COMPLETED = 3;
@@ -51,6 +50,15 @@ public class CompletableActorFuture<V> implements ActorFuture<V> {
   protected V value;
   protected String failure;
   protected Throwable failureCause;
+
+  static {
+    try {
+      STATE_VAR_HANDLE =
+          MethodHandles.lookup().findVarHandle(CompletableActorFuture.class, "state", int.class);
+    } catch (final Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
 
   public CompletableActorFuture() {
     setAwaitingResult();
@@ -161,7 +169,8 @@ public class CompletableActorFuture<V> implements ActorFuture<V> {
 
   @Override
   public void complete(final V value) {
-    if (UNSAFE.compareAndSwapInt(this, STATE_OFFSET, AWAITING_RESULT, COMPLETING)) {
+    if ((int) STATE_VAR_HANDLE.compareAndExchange(this, AWAITING_RESULT, COMPLETING)
+        == AWAITING_RESULT) {
       this.value = value;
       state = COMPLETED;
       notifyBlockedTasks();
@@ -181,7 +190,8 @@ public class CompletableActorFuture<V> implements ActorFuture<V> {
     // important for other actors that consume this by #runOnCompletion
     ensureValidThrowable(throwable);
 
-    if (UNSAFE.compareAndSwapInt(this, STATE_OFFSET, AWAITING_RESULT, COMPLETING)) {
+    if ((int) STATE_VAR_HANDLE.compareAndExchange(this, AWAITING_RESULT, COMPLETING)
+        == AWAITING_RESULT) {
       this.failure = failure;
       failureCause = throwable;
       state = COMPLETED_EXCEPTIONALLY;
@@ -230,7 +240,7 @@ public class CompletableActorFuture<V> implements ActorFuture<V> {
 
   /** future is reusable after close */
   public boolean close() {
-    final int prevState = UNSAFE.getAndSetInt(this, STATE_OFFSET, CLOSED);
+    final int prevState = (int) STATE_VAR_HANDLE.getAndAdd(this, CLOSED);
 
     if (prevState != CLOSED) {
       value = null;
@@ -254,15 +264,6 @@ public class CompletableActorFuture<V> implements ActorFuture<V> {
     }
 
     return failureCause;
-  }
-
-  static {
-    try {
-      STATE_OFFSET =
-          UNSAFE.objectFieldOffset(CompletableActorFuture.class.getDeclaredField("state"));
-    } catch (final Exception ex) {
-      throw new RuntimeException(ex);
-    }
   }
 
   public void completeWith(final CompletableActorFuture<V> otherFuture) {

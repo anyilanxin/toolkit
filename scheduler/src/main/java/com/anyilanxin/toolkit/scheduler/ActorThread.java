@@ -35,24 +35,22 @@ package com.anyilanxin.toolkit.scheduler;
 import com.anyilanxin.toolkit.scheduler.clock.ActorClock;
 import com.anyilanxin.toolkit.scheduler.clock.DefaultActorClock;
 import com.anyilanxin.toolkit.util.BoundedArrayQueue;
-import org.agrona.UnsafeAccess;
-import org.agrona.concurrent.BackoffIdleStrategy;
-import org.agrona.concurrent.ManyToManyConcurrentArrayQueue;
-import org.slf4j.MDC;
-import sun.misc.Unsafe;
-
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.Consumer;
+import org.agrona.concurrent.BackoffIdleStrategy;
+import org.agrona.concurrent.ManyToManyConcurrentArrayQueue;
+import org.slf4j.MDC;
 
 @SuppressWarnings("restriction")
 public class ActorThread extends Thread implements Consumer<Runnable> {
-  static final Unsafe UNSAFE = UnsafeAccess.UNSAFE;
 
   private volatile ActorThreadState state;
 
-  private static final long STATE_OFFSET;
+  private static final VarHandle STATE_VAR_HANDLE;
 
   private final CompletableFuture<Void> terminationFuture = new CompletableFuture<>();
 
@@ -63,7 +61,8 @@ public class ActorThread extends Thread implements Consumer<Runnable> {
 
   static {
     try {
-      STATE_OFFSET = UNSAFE.objectFieldOffset(ActorThread.class.getDeclaredField("state"));
+      STATE_VAR_HANDLE =
+          MethodHandles.lookup().findVarHandle(ActorThread.class, "state", ActorThreadState.class);
     } catch (final Exception e) {
       throw new RuntimeException(e);
     }
@@ -253,8 +252,8 @@ public class ActorThread extends Thread implements Consumer<Runnable> {
 
   @Override
   public void start() {
-    if (UNSAFE.compareAndSwapObject(
-        this, STATE_OFFSET, ActorThreadState.NEW, ActorThreadState.RUNNING)) {
+    if (STATE_VAR_HANDLE.compareAndExchange(this, ActorThreadState.NEW, ActorThreadState.RUNNING)
+        == ActorThreadState.NEW) {
       super.start();
     } else {
       throw new IllegalStateException("Cannot start runner, not in state 'NEW'.");
@@ -262,8 +261,9 @@ public class ActorThread extends Thread implements Consumer<Runnable> {
   }
 
   public CompletableFuture<Void> close() {
-    if (UNSAFE.compareAndSwapObject(
-        this, STATE_OFFSET, ActorThreadState.RUNNING, ActorThreadState.TERMINATING)) {
+    if (STATE_VAR_HANDLE.compareAndExchange(
+            this, ActorThreadState.RUNNING, ActorThreadState.TERMINATING)
+        == ActorThreadState.RUNNING) {
       return terminationFuture;
     } else {
       throw new IllegalStateException("Cannot stop runner, not in state 'RUNNING'.");

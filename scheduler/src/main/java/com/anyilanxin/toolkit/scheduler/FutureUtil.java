@@ -17,7 +17,6 @@
 package com.anyilanxin.toolkit.scheduler;
 
 import com.anyilanxin.toolkit.util.LangUtil;
-
 import java.util.concurrent.Future;
 
 public class FutureUtil {
@@ -36,7 +35,7 @@ public class FutureUtil {
     return null;
   }
 
-    public static Runnable wrap(final Future<?> future) {
+  public static Runnable wrap(final Future<?> future) {
     return () -> {
       try {
         future.get();

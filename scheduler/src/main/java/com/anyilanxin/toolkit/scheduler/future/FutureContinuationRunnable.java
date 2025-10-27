@@ -17,14 +17,14 @@
 package com.anyilanxin.toolkit.scheduler.future;
 
 import com.anyilanxin.toolkit.util.Loggers;
-
 import java.util.function.BiConsumer;
 
 public class FutureContinuationRunnable<T> implements Runnable {
-    private final ActorFuture<T> future;
-    private final BiConsumer<T, Throwable> consumer;
+  private final ActorFuture<T> future;
+  private final BiConsumer<T, Throwable> consumer;
 
-    public FutureContinuationRunnable(final ActorFuture<T> future, final BiConsumer<T, Throwable> consumer) {
+  public FutureContinuationRunnable(
+      final ActorFuture<T> future, final BiConsumer<T, Throwable> consumer) {
     this.future = future;
     this.consumer = consumer;
   }

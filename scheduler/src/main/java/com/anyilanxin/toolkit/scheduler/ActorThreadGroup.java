@@ -17,7 +17,6 @@
 package com.anyilanxin.toolkit.scheduler;
 
 import com.anyilanxin.toolkit.scheduler.ActorScheduler.ActorSchedulerBuilder;
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 

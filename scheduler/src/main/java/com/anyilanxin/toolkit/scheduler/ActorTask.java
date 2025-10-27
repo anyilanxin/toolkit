@@ -19,14 +19,13 @@ package com.anyilanxin.toolkit.scheduler;
 import com.anyilanxin.toolkit.scheduler.future.ActorFuture;
 import com.anyilanxin.toolkit.scheduler.future.CompletableActorFuture;
 import com.anyilanxin.toolkit.util.Loggers;
-import org.agrona.concurrent.ManyToOneConcurrentLinkedQueue;
-
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.Queue;
-
-import static org.agrona.UnsafeAccess.UNSAFE;
+import org.agrona.concurrent.ManyToOneConcurrentLinkedQueue;
 
 /**
  * A task executed by the scheduler. For each actor (instance), exactly one task is created. Each
@@ -64,14 +63,16 @@ public class ActorTask {
     }
   }
 
-  private static final long STATE_COUNT_OFFSET;
-  private static final long SCHEDULING_STATE_OFFSET;
+  private static final VarHandle STATE_COUNT_VAR_HANDLE;
+  private static final VarHandle SCHEDULING_STATE_VAR_HANDLE;
 
   static {
     try {
-      STATE_COUNT_OFFSET = UNSAFE.objectFieldOffset(ActorTask.class.getDeclaredField("stateCount"));
-      SCHEDULING_STATE_OFFSET =
-          UNSAFE.objectFieldOffset(ActorTask.class.getDeclaredField("schedulingState"));
+      STATE_COUNT_VAR_HANDLE =
+          MethodHandles.lookup().findVarHandle(ActorTask.class, "stateCount", long.class);
+      SCHEDULING_STATE_VAR_HANDLE =
+          MethodHandles.lookup()
+              .findVarHandle(ActorTask.class, "schedulingState", TaskSchedulingState.class);
     } catch (final Exception e) {
       throw new RuntimeException(e);
     }
@@ -370,11 +371,17 @@ public class ActorTask {
   }
 
   boolean casStateCount(final long expectedCount) {
-    return UNSAFE.compareAndSwapLong(this, STATE_COUNT_OFFSET, expectedCount, expectedCount + 1);
+    if (expectedCount == stateCount) {
+      stateCount = expectedCount + 1;
+      return true;
+    }
+    return false;
   }
 
   boolean casState(final TaskSchedulingState expectedState, final TaskSchedulingState newState) {
-    return UNSAFE.compareAndSwapObject(this, SCHEDULING_STATE_OFFSET, expectedState, newState);
+    return SCHEDULING_STATE_VAR_HANDLE
+        .compareAndExchange(this, expectedState, newState)
+        .equals(expectedState);
   }
 
   public boolean claim(final long stateCount) {
@@ -438,9 +445,7 @@ public class ActorTask {
   private boolean pollSubscriptions() {
     boolean hasJobs = false;
 
-    for (int i = 0; i < subscriptions.length; i++) {
-      final ActorSubscription subscription = subscriptions[i];
-
+    for (final ActorSubscription subscription : subscriptions) {
       if (pollSubscription(subscription)) {
         final ActorJob job = subscription.getJob();
         job.schedulingState = TaskSchedulingState.QUEUED;
@@ -465,7 +470,7 @@ public class ActorTask {
     boolean result = false;
 
     for (int i = 0; i < subscriptions.length && !result; i++) {
-      result |= pollSubscription(subscriptions[i]);
+      result = pollSubscription(subscriptions[i]);
     }
 
     return result;
@@ -476,7 +481,7 @@ public class ActorTask {
 
     for (int i = 0; i < subscriptions.length && allTriggered; i++) {
       final ActorSubscription subscription = subscriptions[i];
-      allTriggered &= !subscription.triggersInPhase(lifecyclePhase);
+      allTriggered = !subscription.triggersInPhase(lifecyclePhase);
     }
 
     return allTriggered;
