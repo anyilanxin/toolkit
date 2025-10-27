@@ -30,7 +30,7 @@ public class LangUtil {
     throw (T) t;
   }
 
-    public static <T> CompletableFuture<Void> allOf(final List<T> futures) {
+  public static <T> CompletableFuture<Void> allOf(final List<T> futures) {
     return CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()]));
   }
 }

@@ -99,11 +99,10 @@ public class BinaryValue extends BaseValue {
       return true;
     }
 
-    if (!(o instanceof BinaryValue)) {
+    if (!(o instanceof final BinaryValue that)) {
       return false;
     }
 
-    final BinaryValue that = (BinaryValue) o;
     return length == that.length && Objects.equals(data, that.data);
   }
 

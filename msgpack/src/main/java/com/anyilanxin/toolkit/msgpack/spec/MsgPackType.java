@@ -28,7 +28,7 @@ public enum MsgPackType {
   EXTENSION(true),
   NEVER_USED(true);
 
-  protected boolean isScalar;
+  private final boolean isScalar;
 
   MsgPackType(final boolean isScalar) {
     this.isScalar = isScalar;

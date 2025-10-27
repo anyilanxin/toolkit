@@ -16,12 +16,12 @@
  */
 package com.anyilanxin.toolkit.util;
 
+import static org.agrona.BitUtil.findNextPositivePowerOfTwo;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
-
-import static org.agrona.BitUtil.findNextPositivePowerOfTwo;
 
 /** Non concurrent, garbage-free array queue with fixed capacity. */
 public class BoundedArrayQueue<P> implements Iterable<P>, Queue<P> {
@@ -34,16 +34,16 @@ public class BoundedArrayQueue<P> implements Iterable<P>, Queue<P> {
 
   protected BoundedArrayQueueIterator<P> iterator = new BoundedArrayQueueIterator<>();
 
-    public BoundedArrayQueue(final int capacity) {
+  public BoundedArrayQueue(final int capacity) {
     this.capacity = findNextPositivePowerOfTwo(capacity);
-        mask = this.capacity - 1;
+    mask = this.capacity - 1;
 
     head = tail = 0;
 
-        array = new Object[capacity];
+    array = new Object[capacity];
   }
 
-    @Override
+  @Override
   public void clear() {
     head = tail = 0;
     for (int i = 0; i < array.length; i++) {
@@ -52,8 +52,8 @@ public class BoundedArrayQueue<P> implements Iterable<P>, Queue<P> {
     iterator.reset();
   }
 
-    @Override
-    public boolean offer(final P object) {
+  @Override
+  public boolean offer(final P object) {
     final int remainingSpace = capacity - size();
 
     if (remainingSpace > 0) {
@@ -69,7 +69,7 @@ public class BoundedArrayQueue<P> implements Iterable<P>, Queue<P> {
     }
   }
 
-    @Override
+  @Override
   @SuppressWarnings("unchecked")
   public P poll() {
     final int size = size();
@@ -88,7 +88,7 @@ public class BoundedArrayQueue<P> implements Iterable<P>, Queue<P> {
     return (P) object;
   }
 
-    @Override
+  @Override
   @SuppressWarnings("unchecked")
   public P peek() {
     final int size = size();
@@ -104,7 +104,7 @@ public class BoundedArrayQueue<P> implements Iterable<P>, Queue<P> {
     return (P) object;
   }
 
-    @Override
+  @Override
   public int size() {
     return (int) (tail - head);
   }

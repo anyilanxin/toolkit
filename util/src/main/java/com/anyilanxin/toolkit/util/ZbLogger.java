@@ -44,11 +44,11 @@ public class ZbLogger implements Logger {
 
   public ZbLogger(final Logger logger) {
     this.logger = logger;
-      isTraceEnabled = logger.isTraceEnabled();
-      isDebugEnabled = logger.isDebugEnabled();
-      isInfoEnabled = logger.isInfoEnabled();
-      isWarnEnabled = logger.isWarnEnabled();
-      isErrorEnabled = logger.isErrorEnabled();
+    isTraceEnabled = logger.isTraceEnabled();
+    isDebugEnabled = logger.isDebugEnabled();
+    isInfoEnabled = logger.isInfoEnabled();
+    isWarnEnabled = logger.isWarnEnabled();
+    isErrorEnabled = logger.isErrorEnabled();
   }
 
   @Override

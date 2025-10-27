@@ -125,11 +125,10 @@ public abstract class BaseProperty<T extends BaseValue> implements Recyclable {
       return true;
     }
 
-    if (!(o instanceof BaseProperty)) {
+    if (!(o instanceof final BaseProperty<?> that)) {
       return false;
     }
 
-    final BaseProperty<?> that = (BaseProperty<?>) o;
     return Objects.equals(getKey(), that.getKey())
         && Objects.equals(resolveValue(), that.resolveValue());
   }

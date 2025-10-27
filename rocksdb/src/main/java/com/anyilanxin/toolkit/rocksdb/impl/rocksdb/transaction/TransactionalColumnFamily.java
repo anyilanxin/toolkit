@@ -17,10 +17,9 @@
 package com.anyilanxin.toolkit.rocksdb.impl.rocksdb.transaction;
 
 import com.anyilanxin.toolkit.rocksdb.*;
-import org.agrona.DirectBuffer;
-
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import org.agrona.DirectBuffer;
 
 class TransactionalColumnFamily<
         ColumnFamilyNames extends Enum<ColumnFamilyNames>,
@@ -37,11 +36,11 @@ class TransactionalColumnFamily<
   private final KeyType keyInstance;
 
   TransactionalColumnFamily(
-          final ZeebeTransactionDb<ColumnFamilyNames> transactionDb,
-          final ColumnFamilyNames columnFamily,
-          final DbContext context,
-          final KeyType keyInstance,
-          final ValueType valueInstance) {
+      final ZeebeTransactionDb<ColumnFamilyNames> transactionDb,
+      final ColumnFamilyNames columnFamily,
+      final DbContext context,
+      final KeyType keyInstance,
+      final ValueType valueInstance) {
     this.transactionDb = transactionDb;
     handle = this.transactionDb.getColumnFamilyHandle(columnFamily);
     this.context = context;
@@ -64,7 +63,7 @@ class TransactionalColumnFamily<
     return get(context, key);
   }
 
-    public ValueType get(final DbContext context, final KeyType key) {
+  public ValueType get(final DbContext context, final KeyType key) {
     return get(context, key, valueInstance);
   }
 
@@ -84,7 +83,7 @@ class TransactionalColumnFamily<
     forEach(context, consumer);
   }
 
-    public void forEach(final DbContext context, final Consumer<ValueType> consumer) {
+  public void forEach(final DbContext context, final Consumer<ValueType> consumer) {
     transactionDb.foreach(handle, context, valueInstance, consumer);
   }
 
@@ -93,7 +92,7 @@ class TransactionalColumnFamily<
     forEach(context, consumer);
   }
 
-    public void forEach(final DbContext context, final BiConsumer<KeyType, ValueType> consumer) {
+  public void forEach(final DbContext context, final BiConsumer<KeyType, ValueType> consumer) {
     transactionDb.foreach(handle, context, keyInstance, valueInstance, consumer);
   }
 
@@ -102,36 +101,43 @@ class TransactionalColumnFamily<
     whileTrue(context, visitor);
   }
 
-    public void whileTrue(final DbContext context, final KeyValuePairVisitor<KeyType, ValueType> visitor) {
+  public void whileTrue(
+      final DbContext context, final KeyValuePairVisitor<KeyType, ValueType> visitor) {
     whileTrue(context, visitor, keyInstance, valueInstance);
   }
 
   @Override
   public void whileTrue(
-          final DbContext context,
-          final KeyValuePairVisitor<KeyType, ValueType> visitor,
-          final KeyType key,
-          final ValueType value) {
+      final DbContext context,
+      final KeyValuePairVisitor<KeyType, ValueType> visitor,
+      final KeyType key,
+      final ValueType value) {
     transactionDb.whileTrue(handle, context, key, value, visitor);
   }
 
   @Override
-  public void whileEqualPrefix(final DbKey keyPrefix, final BiConsumer<KeyType, ValueType> visitor) {
+  public void whileEqualPrefix(
+      final DbKey keyPrefix, final BiConsumer<KeyType, ValueType> visitor) {
     whileEqualPrefix(context, keyPrefix, visitor);
   }
 
   public void whileEqualPrefix(
-          final DbContext context, final DbKey keyPrefix, final BiConsumer<KeyType, ValueType> visitor) {
+      final DbContext context,
+      final DbKey keyPrefix,
+      final BiConsumer<KeyType, ValueType> visitor) {
     transactionDb.whileEqualPrefix(handle, context, keyPrefix, keyInstance, valueInstance, visitor);
   }
 
   @Override
-  public void whileEqualPrefix(final DbKey keyPrefix, final KeyValuePairVisitor<KeyType, ValueType> visitor) {
+  public void whileEqualPrefix(
+      final DbKey keyPrefix, final KeyValuePairVisitor<KeyType, ValueType> visitor) {
     whileEqualPrefix(context, keyPrefix, visitor);
   }
 
   public void whileEqualPrefix(
-          final DbContext context, final DbKey keyPrefix, final KeyValuePairVisitor<KeyType, ValueType> visitor) {
+      final DbContext context,
+      final DbKey keyPrefix,
+      final KeyValuePairVisitor<KeyType, ValueType> visitor) {
     transactionDb.whileEqualPrefix(handle, context, keyPrefix, keyInstance, valueInstance, visitor);
   }
 
@@ -150,7 +156,7 @@ class TransactionalColumnFamily<
     return exists(context, key);
   }
 
-    public boolean exists(final DbContext context, final KeyType key) {
+  public boolean exists(final DbContext context, final KeyType key) {
     return transactionDb.exists(handle, context, key);
   }
 

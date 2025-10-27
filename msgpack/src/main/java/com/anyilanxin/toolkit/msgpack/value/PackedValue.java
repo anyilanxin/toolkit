@@ -79,11 +79,10 @@ public class PackedValue extends BaseValue {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof PackedValue)) {
+    if (!(o instanceof final PackedValue that)) {
       return false;
     }
 
-    final PackedValue that = (PackedValue) o;
     return length == that.length && Objects.equals(buffer, that.buffer);
   }
 

@@ -16,12 +16,12 @@
  */
 package com.anyilanxin.toolkit.rocksdb.impl.rocksdb.transaction;
 
+import static com.anyilanxin.toolkit.rocksdb.impl.rocksdb.transaction.RocksDbInternal.isRocksDbExceptionRecoverable;
+
 import com.anyilanxin.toolkit.rocksdb.TransactionOperation;
 import com.anyilanxin.toolkit.rocksdb.ZeebeDbException;
 import com.anyilanxin.toolkit.rocksdb.ZeebeDbTransaction;
 import org.rocksdb.*;
-
-import static com.anyilanxin.toolkit.rocksdb.impl.rocksdb.transaction.RocksDbInternal.isRocksDbExceptionRecoverable;
 
 public class ZeebeTransaction implements ZeebeDbTransaction, AutoCloseable {
 

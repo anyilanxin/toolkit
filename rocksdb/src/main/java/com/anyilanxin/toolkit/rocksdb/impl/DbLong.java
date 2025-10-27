@@ -16,18 +16,18 @@
  */
 package com.anyilanxin.toolkit.rocksdb.impl;
 
+import static com.anyilanxin.toolkit.rocksdb.impl.ZeebeDbConstants.ZB_DB_BYTE_ORDER;
+
 import com.anyilanxin.toolkit.rocksdb.DbKey;
 import com.anyilanxin.toolkit.rocksdb.DbValue;
 import org.agrona.DirectBuffer;
 import org.agrona.MutableDirectBuffer;
 
-import static com.anyilanxin.toolkit.rocksdb.impl.ZeebeDbConstants.ZB_DB_BYTE_ORDER;
-
 public class DbLong implements DbKey, DbValue {
 
   private long longValue;
 
-    public void wrapLong(final long value) {
+  public void wrapLong(final long value) {
     longValue = value;
   }
 

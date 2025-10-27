@@ -192,11 +192,10 @@ public class ArrayValue<T extends BaseValue> extends BaseValue implements Iterat
       return true;
     }
 
-    if (!(o instanceof ArrayValue)) {
+    if (!(o instanceof final ArrayValue<?> that)) {
       return false;
     }
 
-    final ArrayValue<?> that = (ArrayValue<?>) o;
     return elementCount == that.elementCount
         && bufferLength == that.bufferLength
         && Objects.equals(buffer, that.buffer);
@@ -208,13 +207,10 @@ public class ArrayValue<T extends BaseValue> extends BaseValue implements Iterat
   }
 
   private int getInnerValueLength() {
-    switch (innerValueState) {
-      case Insert:
-      case Modify:
-        return innerValue.getEncodedLength();
-    }
-
-    return 0;
+    return switch (innerValueState) {
+      case Insert, Modify -> innerValue.getEncodedLength();
+      default -> 0;
+    };
   }
 
   private void readInnerValue() {

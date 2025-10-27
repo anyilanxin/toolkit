@@ -70,11 +70,10 @@ public class BooleanValue extends BaseValue {
       return true;
     }
 
-    if (!(o instanceof BooleanValue)) {
+    if (!(o instanceof final BooleanValue that)) {
       return false;
     }
 
-    final BooleanValue that = (BooleanValue) o;
     return val == that.val;
   }
 

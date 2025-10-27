@@ -16,15 +16,14 @@
  */
 package com.anyilanxin.toolkit.rocksdb.impl.rocksdb.transaction;
 
-import org.rocksdb.*;
-import org.rocksdb.Status.Code;
+import static org.rocksdb.Status.Code.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.EnumSet;
-
-import static org.rocksdb.Status.Code.*;
+import org.rocksdb.*;
+import org.rocksdb.Status.Code;
 
 public class RocksDbInternal {
   static final EnumSet<Code> RECOVERABLE_ERROR_CODES =

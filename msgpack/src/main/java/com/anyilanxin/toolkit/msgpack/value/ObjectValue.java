@@ -20,7 +20,6 @@ import com.anyilanxin.toolkit.msgpack.property.BaseProperty;
 import com.anyilanxin.toolkit.msgpack.property.UndeclaredProperty;
 import com.anyilanxin.toolkit.msgpack.spec.MsgPackReader;
 import com.anyilanxin.toolkit.msgpack.spec.MsgPackWriter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,8 +38,7 @@ public class ObjectValue extends BaseValue {
 
   @Override
   public void reset() {
-    for (int i = 0; i < declaredProperties.size(); ++i) {
-      final BaseProperty<? extends BaseValue> prop = declaredProperties.get(i);
+    for (final BaseProperty<? extends BaseValue> prop : declaredProperties) {
       prop.reset();
     }
 
@@ -54,7 +52,7 @@ public class ObjectValue extends BaseValue {
   private UndeclaredProperty newUndeclaredProperty(final StringValue key) {
     final int recycledSize = recycledProperties.size();
 
-    UndeclaredProperty prop = null;
+    final UndeclaredProperty prop;
 
     if (recycledSize > 0) {
       prop = recycledProperties.remove(recycledSize - 1);
@@ -102,8 +100,7 @@ public class ObjectValue extends BaseValue {
 
       BaseProperty<? extends BaseValue> prop = null;
 
-      for (int k = 0; k < declaredProperties.size(); ++k) {
-        final BaseProperty<?> declaredProperty = declaredProperties.get(k);
+      for (final BaseProperty<?> declaredProperty : declaredProperties) {
         final StringValue declaredKey = declaredProperty.getKey();
 
         if (declaredKey.equals(decodedKey)) {
@@ -124,8 +121,7 @@ public class ObjectValue extends BaseValue {
     }
 
     // verify that all required properties are set
-    for (int p = 0; p < declaredProperties.size(); p++) {
-      final BaseProperty<?> prop = declaredProperties.get(p);
+    for (final BaseProperty<?> prop : declaredProperties) {
       if (!prop.hasValue()) {
         throw new RuntimeException(
             String.format("Property '%s' has no valid value", prop.getKey()));
@@ -150,8 +146,7 @@ public class ObjectValue extends BaseValue {
 
   protected <T extends BaseProperty<?>> void write(
       final MsgPackWriter writer, final List<T> properties) {
-    for (int i = 0; i < properties.size(); ++i) {
-      final BaseProperty<? extends BaseValue> prop = properties.get(i);
+    for (final BaseProperty<? extends BaseValue> prop : properties) {
       prop.write(writer);
     }
   }
@@ -173,11 +168,10 @@ public class ObjectValue extends BaseValue {
       return true;
     }
 
-    if (!(o instanceof ObjectValue)) {
+    if (!(o instanceof final ObjectValue that)) {
       return false;
     }
 
-    final ObjectValue that = (ObjectValue) o;
     return Objects.equals(declaredProperties, that.declaredProperties)
         && Objects.equals(undeclaredProperties, that.undeclaredProperties)
         && Objects.equals(recycledProperties, that.recycledProperties);
@@ -190,8 +184,7 @@ public class ObjectValue extends BaseValue {
 
   protected <T extends BaseProperty<?>> int getEncodedLength(final List<T> properties) {
     int length = 0;
-    for (int i = 0; i < properties.size(); ++i) {
-      final T prop = properties.get(i);
+    for (final T prop : properties) {
       length += prop.getEncodedLength();
     }
     return length;

@@ -21,5 +21,5 @@ import org.slf4j.Logger;
 
 public class Loggers {
 
-    public static final Logger DB_LOGGER = new ZbLogger("com.anyilanxin.toolkit.rocksdb");
+  public static final Logger DB_LOGGER = new ZbLogger("com.anyilanxin.toolkit.rocksdb");
 }

@@ -26,7 +26,8 @@ public class DbCompositeKey<FirstKeyType extends DbKey, SecondKeyType extends Db
   private final FirstKeyType firstKeyTypePart;
   private final SecondKeyType secondKeyTypePart;
 
-    public DbCompositeKey(final FirstKeyType firstKeyTypePart, final SecondKeyType secondKeyTypePart) {
+  public DbCompositeKey(
+      final FirstKeyType firstKeyTypePart, final SecondKeyType secondKeyTypePart) {
     this.firstKeyTypePart = firstKeyTypePart;
     this.secondKeyTypePart = secondKeyTypePart;
   }

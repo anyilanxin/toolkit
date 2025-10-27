@@ -16,14 +16,14 @@
  */
 package com.anyilanxin.toolkit.rocksdb.impl;
 
+import static com.anyilanxin.toolkit.rocksdb.impl.ZeebeDbConstants.ZB_DB_BYTE_ORDER;
+
 import com.anyilanxin.toolkit.rocksdb.DbKey;
 import com.anyilanxin.toolkit.rocksdb.DbValue;
 import com.anyilanxin.toolkit.util.buffer.BufferUtil;
 import org.agrona.DirectBuffer;
 import org.agrona.MutableDirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
-
-import static com.anyilanxin.toolkit.rocksdb.impl.ZeebeDbConstants.ZB_DB_BYTE_ORDER;
 
 public class DbString implements DbKey, DbValue {
 

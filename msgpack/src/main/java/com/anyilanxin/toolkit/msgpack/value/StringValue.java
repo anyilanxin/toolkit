@@ -16,15 +16,14 @@
  */
 package com.anyilanxin.toolkit.msgpack.value;
 
+import static com.anyilanxin.toolkit.util.buffer.BufferUtil.wrapString;
+
 import com.anyilanxin.toolkit.msgpack.spec.MsgPackReader;
 import com.anyilanxin.toolkit.msgpack.spec.MsgPackWriter;
+import java.util.Objects;
 import org.agrona.DirectBuffer;
 import org.agrona.MutableDirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
-
-import java.util.Objects;
-
-import static com.anyilanxin.toolkit.util.buffer.BufferUtil.wrapString;
 
 public class StringValue extends BaseValue {
   public static final String EMPTY_STRING = "";
@@ -127,11 +126,10 @@ public class StringValue extends BaseValue {
       return true;
     }
 
-    if (!(o instanceof StringValue)) {
+    if (!(o instanceof final StringValue that)) {
       return false;
     }
 
-    final StringValue that = (StringValue) o;
     return getLength() == that.getLength() && Objects.equals(bytes, that.bytes);
   }
 

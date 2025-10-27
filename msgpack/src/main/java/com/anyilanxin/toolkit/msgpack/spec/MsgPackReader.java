@@ -248,22 +248,11 @@ public class MsgPackReader {
     final byte headerByte = buffer.getByte(offset);
     ++offset;
 
-    final boolean theBool;
-
-    switch (headerByte) {
-      case TRUE:
-        theBool = true;
-        break;
-
-      case FALSE:
-        theBool = false;
-        break;
-
-      default:
-        throw exceptionOnUnknownHeader("boolean", headerByte);
-    }
-
-    return theBool;
+    return switch (headerByte) {
+      case TRUE -> true;
+      case FALSE -> false;
+      default -> throw exceptionOnUnknownHeader("boolean", headerByte);
+    };
   }
 
   public MsgPackToken readToken() {

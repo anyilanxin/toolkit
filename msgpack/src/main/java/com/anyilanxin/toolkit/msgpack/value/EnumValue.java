@@ -94,11 +94,10 @@ public class EnumValue<E extends Enum<E>> extends BaseValue {
       return true;
     }
 
-    if (!(o instanceof EnumValue)) {
+    if (!(o instanceof final EnumValue<?> enumValue)) {
       return false;
     }
 
-    final EnumValue<?> enumValue = (EnumValue<?>) o;
     return Objects.equals(getValue(), enumValue.getValue());
   }
 

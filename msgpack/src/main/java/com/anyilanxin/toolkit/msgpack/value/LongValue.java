@@ -70,11 +70,10 @@ public class LongValue extends BaseValue {
       return true;
     }
 
-    if (!(o instanceof LongValue)) {
+    if (!(o instanceof final LongValue longValue)) {
       return false;
     }
 
-    final LongValue longValue = (LongValue) o;
     return getValue() == longValue.getValue();
   }
 

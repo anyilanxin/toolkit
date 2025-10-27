@@ -77,11 +77,10 @@ public class IntegerValue extends BaseValue {
       return true;
     }
 
-    if (!(o instanceof IntegerValue)) {
+    if (!(o instanceof final IntegerValue that)) {
       return false;
     }
 
-    final IntegerValue that = (IntegerValue) o;
     return getValue() == that.getValue();
   }
 

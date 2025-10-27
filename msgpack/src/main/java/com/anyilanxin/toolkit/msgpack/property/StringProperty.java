@@ -16,10 +16,10 @@
  */
 package com.anyilanxin.toolkit.msgpack.property;
 
+import static com.anyilanxin.toolkit.util.StringUtil.getBytes;
+
 import com.anyilanxin.toolkit.msgpack.value.StringValue;
 import org.agrona.DirectBuffer;
-
-import static com.anyilanxin.toolkit.util.StringUtil.getBytes;
 
 public class StringProperty extends BaseProperty<StringValue> {
 

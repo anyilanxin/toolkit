@@ -16,13 +16,12 @@
  */
 package com.anyilanxin.toolkit.rocksdb;
 
+import java.util.function.Consumer;
 import org.agrona.DirectBuffer;
 import org.agrona.ExpandableArrayBuffer;
 import org.rocksdb.ColumnFamilyHandle;
 import org.rocksdb.ReadOptions;
 import org.rocksdb.RocksIterator;
-
-import java.util.function.Consumer;
 
 /** Represents the shared state of a database interaction */
 public interface DbContext {
