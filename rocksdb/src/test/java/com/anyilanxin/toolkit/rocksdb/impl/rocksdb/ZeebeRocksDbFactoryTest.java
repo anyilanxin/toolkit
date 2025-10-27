@@ -19,6 +19,7 @@ package com.anyilanxin.toolkit.rocksdb.impl.rocksdb;
 import com.anyilanxin.toolkit.rocksdb.ZeebeDb;
 import com.anyilanxin.toolkit.rocksdb.ZeebeDbFactory;
 import com.anyilanxin.toolkit.rocksdb.impl.DefaultColumnFamily;
+import com.anyilanxin.toolkit.rocksdb.impl.RocksDbConfiguration;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -35,7 +36,7 @@ public class ZeebeRocksDbFactoryTest {
   public void shouldCreateNewDb() throws Exception {
     // given
     final ZeebeDbFactory<DefaultColumnFamily> dbFactory =
-        ZeebeRocksDbFactory.newFactory(DefaultColumnFamily.class);
+            ZeebeRocksDbFactory.newFactory(DefaultColumnFamily.class, new RocksDbConfiguration());
 
     final File pathName = temporaryFolder.newFolder();
 
@@ -51,7 +52,7 @@ public class ZeebeRocksDbFactoryTest {
   public void shouldCreateTwoNewDbs() throws Exception {
     // given
     final ZeebeDbFactory<DefaultColumnFamily> dbFactory =
-        ZeebeRocksDbFactory.newFactory(DefaultColumnFamily.class);
+            ZeebeRocksDbFactory.newFactory(DefaultColumnFamily.class, new RocksDbConfiguration());
     final File firstPath = temporaryFolder.newFolder();
     final File secondPath = temporaryFolder.newFolder();
 

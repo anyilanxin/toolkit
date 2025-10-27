@@ -9,7 +9,11 @@ configure(jarInfo) {
 }
 dependencies {
     api 'org.agrona:agrona'
-    api 'org.rocksdb:rocksdbjni'
+    api ('org.rocksdb:rocksdbjni'){
+        artifact { classifier = "linux64" }
+        artifact { classifier = "osx" }
+        artifact { classifier = "win64" }
+    }
     api 'org.slf4j:slf4j-api'
     api project(':msgpack');
 

@@ -16,17 +16,19 @@
  */
 package com.anyilanxin.toolkit.rocksdb.impl.rocksdb;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.anyilanxin.toolkit.rocksdb.ColumnFamily;
 import com.anyilanxin.toolkit.rocksdb.ZeebeDb;
 import com.anyilanxin.toolkit.rocksdb.ZeebeDbFactory;
 import com.anyilanxin.toolkit.rocksdb.impl.DbString;
 import com.anyilanxin.toolkit.rocksdb.impl.DefaultColumnFamily;
-import java.io.File;
+import com.anyilanxin.toolkit.rocksdb.impl.RocksDbConfiguration;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import java.io.File;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ZeebeRocksDbTest {
 
@@ -36,7 +38,7 @@ public class ZeebeRocksDbTest {
   public void shouldCreateSnapshot() throws Exception {
     // given
     final ZeebeDbFactory<DefaultColumnFamily> dbFactory =
-        ZeebeRocksDbFactory.newFactory(DefaultColumnFamily.class);
+            ZeebeRocksDbFactory.newFactory(DefaultColumnFamily.class, new RocksDbConfiguration());
 
     final File pathName = temporaryFolder.newFolder();
     final ZeebeDb<DefaultColumnFamily> db = dbFactory.createDb(pathName);
@@ -62,7 +64,7 @@ public class ZeebeRocksDbTest {
   public void shouldReopenDb() throws Exception {
     // given
     final ZeebeDbFactory<DefaultColumnFamily> dbFactory =
-        ZeebeRocksDbFactory.newFactory(DefaultColumnFamily.class);
+            ZeebeRocksDbFactory.newFactory(DefaultColumnFamily.class, new RocksDbConfiguration());
     final File pathName = temporaryFolder.newFolder();
     ZeebeDb<DefaultColumnFamily> db = dbFactory.createDb(pathName);
 
@@ -92,7 +94,7 @@ public class ZeebeRocksDbTest {
   public void shouldRecoverFromSnapshot() throws Exception {
     // given
     final ZeebeDbFactory<DefaultColumnFamily> dbFactory =
-        ZeebeRocksDbFactory.newFactory(DefaultColumnFamily.class);
+            ZeebeRocksDbFactory.newFactory(DefaultColumnFamily.class, new RocksDbConfiguration());
     final File pathName = temporaryFolder.newFolder();
     ZeebeDb<DefaultColumnFamily> db = dbFactory.createDb(pathName);
 
