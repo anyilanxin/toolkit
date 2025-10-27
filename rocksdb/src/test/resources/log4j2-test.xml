@@ -11,7 +11,7 @@
 
   <Loggers>
     <Logger name="io.zeebe" level="debug"/>
-    <!-- <Logger name="io.zeebe.db" level="trace"/> -->
+    <!-- <Logger name="com.anyilanxin.toolkit.rocksdb" level="trace"/> -->
 
     <Root level="info">
       <AppenderRef ref="Console"/>
