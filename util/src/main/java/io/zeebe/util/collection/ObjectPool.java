@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +16,26 @@
  */
 package io.zeebe.util.collection;
 
-import java.util.function.Function;
 import org.agrona.concurrent.ManyToManyConcurrentArrayQueue;
+
+import java.util.function.Function;
 
 public class ObjectPool<T> {
   protected ManyToManyConcurrentArrayQueue<T> queue;
 
-  public ObjectPool(int capacity, Function<ObjectPool<T>, T> objectFactory) {
-    this.queue = new ManyToManyConcurrentArrayQueue<>(capacity);
+    public ObjectPool(final int capacity, final Function<ObjectPool<T>, T> objectFactory) {
+        queue = new ManyToManyConcurrentArrayQueue<>(capacity);
 
     for (int i = 0; i < capacity; i++) {
-      this.queue.add(objectFactory.apply(this));
+        queue.add(objectFactory.apply(this));
     }
   }
 
-  public void returnObject(T pooledFuture) {
+    public void returnObject(final T pooledFuture) {
     queue.add(pooledFuture);
   }
 
   public T request() {
-    return this.queue.poll();
+      return queue.poll();
   }
 }

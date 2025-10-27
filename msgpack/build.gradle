@@ -1,0 +1,16 @@
+plugins {
+    id 'build-publish'
+}
+
+description = "An Yi Msgpack"
+
+configure(jarInfo) {
+    archiveName = "anyi-msgpack"
+}
+dependencies {
+    api 'org.agrona:agrona'
+    api project(':util');
+
+    testImplementation 'org.msgpack:msgpack-core'
+    testImplementation 'junit:junit'
+}

@@ -1,0 +1,19 @@
+plugins {
+    id 'build-publish'
+}
+
+description = "An Yi Rocksdb"
+
+configure(jarInfo) {
+    archiveName = "anyi-rocksdb"
+}
+dependencies {
+    api 'org.agrona:agrona'
+    api 'org.rocksdb:rocksdbjni'
+    api 'org.slf4j:slf4j-api'
+    api project(':msgpack');
+
+    testImplementation 'junit:junit'
+    testImplementation 'org.assertj:assertj-core'
+    testImplementation 'org.mockito:mockito-core'
+}

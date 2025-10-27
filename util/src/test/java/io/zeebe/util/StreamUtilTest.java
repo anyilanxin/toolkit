@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +16,6 @@
  */
 package io.zeebe.util;
 
-import static io.zeebe.util.StreamUtil.readLong;
-import static io.zeebe.util.StreamUtil.writeLong;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 import org.agrona.DirectBuffer;
 import org.agrona.ExpandableArrayBuffer;
 import org.agrona.ExpandableDirectByteBuffer;
@@ -37,6 +25,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
+
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+import static io.zeebe.util.StreamUtil.readLong;
+import static io.zeebe.util.StreamUtil.writeLong;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /** */
 public class StreamUtilTest {

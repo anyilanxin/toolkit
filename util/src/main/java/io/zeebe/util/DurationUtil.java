@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +24,7 @@ public class DurationUtil {
    * Input format expected to be [value][unit], where: - value is a number {@link
    * java.lang.Float#parseFloat} - unit is one of: 'ms', 's', 'm', 'h'
    */
-  public static Duration parse(String durationString) {
+  public static Duration parse(final String durationString) {
     final String matchedUnit = extractUnit(durationString);
     final String matchedValue =
         durationString.substring(0, durationString.length() - matchedUnit.length());
@@ -63,7 +64,7 @@ public class DurationUtil {
     return Duration.of(value, unit);
   }
 
-  private static String extractUnit(CharSequence humanReadable) {
+    private static String extractUnit(final CharSequence humanReadable) {
     final StringBuilder unitBuilder = new StringBuilder();
     for (int i = humanReadable.length() - 1; i >= 0; i--) {
       final char current = humanReadable.charAt(i);

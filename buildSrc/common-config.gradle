@@ -1,0 +1,17 @@
+
+ext {
+
+    def isAnYiSnapshots = Boolean.parseBoolean(anyiSnapshots)
+    def anyiSnapshotsSuffix = 'snapshot'
+    def anyiReleasesSuffix = 'release'
+    def anyiRepoUrlPrefix = 'https://packages.aliyun.com/63581b190e55ca7465986664/maven/'
+    // 仓库配置
+    repo = [
+            'snapshotsRepoUrl': "${anyiRepoUrlPrefix}${anyiSnapshotsSuffix}",
+            'releasesRepoUrl' : "${anyiRepoUrlPrefix}${anyiReleasesSuffix}",
+            'url'             : "${anyiRepoUrlPrefix}${isAnYiSnapshots ? anyiSnapshotsSuffix : anyiReleasesSuffix}",
+            'username'        : System.getenv("ALIYUN_REPO_USERNAME"),
+            'password'        : System.getenv("ALIYUN_REPO_PASSWORD"),
+    ]
+}
+

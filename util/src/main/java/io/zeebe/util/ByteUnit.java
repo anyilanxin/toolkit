@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,32 +27,32 @@ public enum ByteUnit {
   private final double unitFactor;
   private final String metric;
 
-  ByteUnit(double factor, String metric) {
-    this.unitFactor = factor;
+    ByteUnit(final double factor, final String metric) {
+        unitFactor = factor;
     this.metric = metric;
   }
 
-  public long toBytes(long value) {
+    public long toBytes(final long value) {
     final double methodFactor = 0;
     return calculateValue(value, methodFactor);
   }
 
-  public long toKilobytes(long value) {
+    public long toKilobytes(final long value) {
     final double methodFactor = 1;
     return calculateValue(value, methodFactor);
   }
 
-  public long toMegabytes(long value) {
+    public long toMegabytes(final long value) {
     final double methodFactor = 2;
     return calculateValue(value, methodFactor);
   }
 
-  public long toGigabytes(long value) {
+    public long toGigabytes(final long value) {
     final double methodFactor = 3;
     return calculateValue(value, methodFactor);
   }
 
-  private long calculateValue(long value, double methodFactor) {
+    private long calculateValue(final long value, final double methodFactor) {
     if (unitFactor < methodFactor) {
       return value / (long) Math.pow(1024, methodFactor - unitFactor);
     } else if (unitFactor == methodFactor) {
@@ -61,7 +62,7 @@ public enum ByteUnit {
     }
   }
 
-  public static ByteUnit getUnit(String unitString) {
+    public static ByteUnit getUnit(final String unitString) {
     return Arrays.stream(ByteUnit.values())
         .filter(unit -> unit.metric.equalsIgnoreCase(unitString))
         .findAny()

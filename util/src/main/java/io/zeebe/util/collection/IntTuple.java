@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +20,7 @@ public class IntTuple<R> {
   private int left;
   private R right;
 
-  public IntTuple(int left, R right) {
+    public IntTuple(final int left, final R right) {
     this.left = left;
     this.right = right;
   }
@@ -32,11 +33,11 @@ public class IntTuple<R> {
     return right;
   }
 
-  public void setInt(int left) {
+    public void setInt(final int left) {
     this.left = left;
   }
 
-  public void setRight(R right) {
+    public void setRight(final R right) {
     this.right = right;
   }
 

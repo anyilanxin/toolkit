@@ -1,0 +1,17 @@
+plugins {
+    id 'build-publish'
+}
+
+description = "An Yi Util"
+
+configure(jarInfo) {
+    archiveName = "anyi-util"
+}
+dependencies {
+    api 'org.agrona:agrona'
+    api 'junit:junit'
+
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.assertj:assertj-core'
+    testImplementation 'org.openjdk.jmh:jmh-core'
+}

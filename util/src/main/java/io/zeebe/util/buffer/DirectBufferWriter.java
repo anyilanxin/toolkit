@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +30,11 @@ public class DirectBufferWriter implements BufferWriter {
   }
 
   @Override
-  public void write(MutableDirectBuffer writeBuffer, int writeOffset) {
+  public void write(final MutableDirectBuffer writeBuffer, final int writeOffset) {
     writeBuffer.putBytes(writeOffset, buffer, offset, length);
   }
 
-  public DirectBufferWriter wrap(DirectBuffer buffer, int offset, int length) {
+    public DirectBufferWriter wrap(final DirectBuffer buffer, final int offset, final int length) {
     this.buffer = buffer;
     this.offset = offset;
     this.length = length;
@@ -41,7 +42,7 @@ public class DirectBufferWriter implements BufferWriter {
     return this;
   }
 
-  public DirectBufferWriter wrap(DirectBuffer buffer) {
+    public DirectBufferWriter wrap(final DirectBuffer buffer) {
     return wrap(buffer, 0, buffer.capacity());
   }
 
@@ -51,7 +52,7 @@ public class DirectBufferWriter implements BufferWriter {
     length = 0;
   }
 
-  public static DirectBufferWriter writerFor(DirectBuffer buffer) {
+    public static DirectBufferWriter writerFor(final DirectBuffer buffer) {
     return new DirectBufferWriter().wrap(buffer);
   }
 }

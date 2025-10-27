@@ -1,0 +1,18 @@
+plugins {
+    id 'build-publish'
+}
+
+description = "An Yi Scheduler"
+
+configure(jarInfo) {
+    archiveName = "anyi-scheduler"
+}
+dependencies {
+    api 'org.agrona:agrona'
+    api 'junit:junit'
+    api project(':util');
+
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.assertj:assertj-core'
+    testImplementation 'org.openjdk.jmh:jmh-core'
+}

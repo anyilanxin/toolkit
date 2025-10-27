@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +16,23 @@
  */
 package io.zeebe.util.collection;
 
-import static io.zeebe.util.collection.CompactListDescriptor.elementDataOffset;
-import static io.zeebe.util.collection.CompactListDescriptor.elementOffset;
-import static io.zeebe.util.collection.CompactListDescriptor.framedLength;
-import static io.zeebe.util.collection.CompactListDescriptor.requiredBufferCapacity;
-import static org.agrona.BitUtil.SIZE_OF_INT;
-import static org.agrona.BitUtil.SIZE_OF_LONG;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.zeebe.util.allocation.AllocatedBuffer;
 import io.zeebe.util.allocation.BufferAllocators;
 import io.zeebe.util.allocation.DirectBufferAllocator;
-import java.util.Comparator;
-import java.util.NoSuchElementException;
 import org.agrona.DirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.Comparator;
+import java.util.NoSuchElementException;
+
+import static io.zeebe.util.collection.CompactListDescriptor.*;
+import static org.agrona.BitUtil.SIZE_OF_INT;
+import static org.agrona.BitUtil.SIZE_OF_LONG;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CompactListTest {
   CompactList list;
@@ -59,7 +58,8 @@ public class CompactListTest {
     expectedExceptionRule.expect(IllegalArgumentException.class);
 
     // when
-    try (CompactList list = new CompactList(allocatedBuffer, 16, 10)) {}
+      try (final CompactList list = new CompactList(allocatedBuffer, 16, 10)) {
+      }
   }
 
   @Test
@@ -455,7 +455,7 @@ public class CompactListTest {
             keyBuffer,
             new Comparator<DirectBuffer>() {
               @Override
-              public int compare(DirectBuffer o1, DirectBuffer o2) {
+              public int compare(final DirectBuffer o1, final DirectBuffer o2) {
                 return Integer.compare(o1.getInt(0), o2.getInt(0));
               }
             });
@@ -494,7 +494,7 @@ public class CompactListTest {
             keyBuffer,
             new Comparator<DirectBuffer>() {
               @Override
-              public int compare(DirectBuffer o1, DirectBuffer o2) {
+              public int compare(final DirectBuffer o1, final DirectBuffer o2) {
                 return Integer.compare(o1.getInt(0), o2.getInt(0));
               }
             });

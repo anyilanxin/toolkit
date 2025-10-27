@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +16,10 @@
  */
 package io.zeebe.util;
 
-import static io.zeebe.util.ByteUnit.BYTES;
-import static io.zeebe.util.ByteUnit.KILOBYTES;
-import static io.zeebe.util.ByteUnit.MEGABYTES;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static io.zeebe.util.ByteUnit.*;
 
 public class ByteValue {
   private static final Pattern PATTERN =
@@ -29,28 +28,28 @@ public class ByteValue {
   private final ByteUnit unit;
   private final long value;
 
-  public ByteValue(long value, ByteUnit unit) {
+    public ByteValue(final long value, final ByteUnit unit) {
     this.value = value;
     this.unit = unit;
   }
 
-  public static ByteValue ofBytes(long value) {
+    public static ByteValue ofBytes(final long value) {
     return new ByteValue(value, ByteUnit.BYTES);
   }
 
-  public static ByteValue ofKilobytes(long value) {
+    public static ByteValue ofKilobytes(final long value) {
     return new ByteValue(value, ByteUnit.KILOBYTES);
   }
 
-  public static ByteValue ofMegabytes(long value) {
+    public static ByteValue ofMegabytes(final long value) {
     return new ByteValue(value, ByteUnit.MEGABYTES);
   }
 
-  public static ByteValue ofGigabytes(long value) {
+    public static ByteValue ofGigabytes(final long value) {
     return new ByteValue(value, ByteUnit.GIGABYTES);
   }
 
-  public ByteValue(String humanReadable) {
+    public ByteValue(final String humanReadable) {
     final Matcher matcher = PATTERN.matcher(humanReadable);
 
     if (!matcher.matches()) {
@@ -112,7 +111,7 @@ public class ByteValue {
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(final Object obj) {
     if (this == obj) {
       return true;
     }

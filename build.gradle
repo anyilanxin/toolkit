@@ -1,0 +1,115 @@
+plugins {
+    id 'idea'
+    id "java"
+    id 'java-library'
+    id "com.diffplug.spotless" version "7.0.3"
+    id "code-spotless"
+}
+
+
+apply from: rootProject.file('buildSrc/common-config.gradle')
+
+
+// root关闭一些任务
+gradle.taskGraph.whenReady {
+    tasks.each { task ->
+        if (task.name.startsWith('jar')) {
+            task.enabled = false
+        }
+    }
+}
+
+
+// 所有项目下载仓库
+allprojects {
+
+    // 编译jdk版本
+    java {
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
+    }
+    group = 'com.anyilanxin.toolkit'
+    tasks.withType(Jar).configureEach {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+
+    // 掉头分发脚本打包以及 test fixturesJar
+    gradle.taskGraph.whenReady {
+        tasks.each { task ->
+            if (task.name.contains("startScripts") || task.name == "testFixturesJar") {
+                task.enabled = false
+                task.group = null
+            }
+        }
+    }
+
+
+    tasks.withType(JavaCompile).configureEach {
+        options.compilerArgs.add("-parameters")
+    }
+
+    compileJava {
+        options.fork = true
+        options.forkOptions.jvmArgs += ['-Xlint:-deprecation']
+    }
+
+    // 指定所有项目maven仓库
+    repositories {
+        maven {
+            url 'https://maven.aliyun.com/repository/central/'
+        }
+        mavenCentral {
+            content {
+                excludeGroup "io.confluent"
+            }
+        }
+    }
+
+    configurations.configureEach {
+        resolutionStrategy {
+            cacheChangingModulesFor 0, "seconds"
+            cacheDynamicVersionsFor 0, "seconds"
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'idea'
+
+    if (project.name != 'bom') {
+        apply plugin: "java"
+        apply plugin: "java-test-fixtures"
+        // 指定编译编码
+        tasks.withType(JavaCompile).configureEach {
+            options.encoding = "UTF-8"
+        }
+
+        configurations {
+            compileOnly {
+                extendsFrom annotationProcessor
+            }
+        }
+        // 公共依赖
+        dependencies {
+            implementation platform(project(':bom'))
+            annotationProcessor platform(project(':bom'))
+            testFixturesImplementation platform(project(':bom'))
+        }
+
+        // 定义跳过测试的 build 任务
+        tasks.register('buildSkipTest') {
+            group = 'build'
+            description = 'Builds the project skip tests'
+            doFirst {
+                tasks.withType(Test).configureEach { testTask ->
+                    testTask.enabled = false
+                }
+                tasks.named('check').configure { checkTask ->
+                    checkTask.enabled = false
+                }
+            }
+            dependsOn tasks.named('classes')
+            dependsOn tasks.named('jar')
+        }
+    }
+}

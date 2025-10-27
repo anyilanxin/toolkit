@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +16,13 @@
  */
 package io.zeebe.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.function.BooleanSupplier;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public final class TestUtil {
 
-  public static void waitUntil(BooleanSupplier condition) {
+    public static void waitUntil(final BooleanSupplier condition) {
     boolean isMet = false;
     int iterations = 0;
 
@@ -33,7 +34,7 @@ public final class TestUtil {
 
         try {
           Thread.sleep(10);
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
           e.printStackTrace();
         }
       }

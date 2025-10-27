@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +16,16 @@
  */
 package io.zeebe.util.buffer;
 
-import static io.zeebe.util.EnsureUtil.ensureGreaterThanOrEqual;
-import static io.zeebe.util.StringUtil.getBytes;
-
-import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
 import org.agrona.DirectBuffer;
 import org.agrona.ExpandableArrayBuffer;
 import org.agrona.MutableDirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
+
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+
+import static io.zeebe.util.EnsureUtil.ensureGreaterThanOrEqual;
+import static io.zeebe.util.StringUtil.getBytes;
 
 public final class BufferUtil {
   public static final int NO_WRAP = 1;
@@ -47,12 +49,12 @@ public final class BufferUtil {
     return new String(bytes, StandardCharsets.UTF_8);
   }
 
-  public static DirectBuffer wrapString(String argument) {
+    public static DirectBuffer wrapString(final String argument) {
     return new UnsafeBuffer(getBytes(argument));
   }
 
   /** Compare the given buffers. */
-  public static boolean equals(DirectBuffer buffer1, DirectBuffer buffer2) {
+  public static boolean equals(final DirectBuffer buffer1, final DirectBuffer buffer2) {
     if (buffer1 instanceof UnsafeBuffer && buffer2 instanceof UnsafeBuffer) {
       return buffer1.equals(buffer2);
     } else if (buffer1 instanceof ExpandableArrayBuffer
@@ -64,7 +66,7 @@ public final class BufferUtil {
   }
 
   /** byte-by-byte comparison of two buffers */
-  public static boolean contentsEqual(DirectBuffer buffer1, DirectBuffer buffer2) {
+  public static boolean contentsEqual(final DirectBuffer buffer1, final DirectBuffer buffer2) {
 
     if (buffer1.capacity() == buffer2.capacity()) {
       boolean equal = true;
@@ -205,16 +207,16 @@ public final class BufferUtil {
     return array;
   }
 
-  public static MutableDirectBuffer wrapArray(byte[] array) {
+    public static MutableDirectBuffer wrapArray(final byte[] array) {
     return new UnsafeBuffer(array);
   }
 
   /** Does not care about overflows; just for convenience of writing int literals */
-  public static MutableDirectBuffer wrapBytes(int... bytes) {
+  public static MutableDirectBuffer wrapBytes(final int... bytes) {
     return new UnsafeBuffer(intArrayToByteArray(bytes));
   }
 
-  public static int bufferContentsHash(DirectBuffer buffer) {
+    public static int bufferContentsHash(final DirectBuffer buffer) {
     int hashCode = 1;
 
     for (int i = 0, length = buffer.capacity(); i < length; i++) {
@@ -236,12 +238,12 @@ public final class BufferUtil {
    * @return true if array starts with the all bytes contained in prefix
    */
   public static boolean startsWith(
-      final byte[] prefix,
-      int prefixOffset,
-      final int prefixLength,
-      final byte[] content,
-      int contentOffset,
-      final int contentLength) {
+          final byte[] prefix,
+          final int prefixOffset,
+          final int prefixLength,
+          final byte[] content,
+          int contentOffset,
+          final int contentLength) {
     if (contentLength < prefixLength) {
       return false;
     }
@@ -255,7 +257,7 @@ public final class BufferUtil {
     return true;
   }
 
-  protected static byte[] intArrayToByteArray(int[] input) {
+    protected static byte[] intArrayToByteArray(final int[] input) {
     final byte[] result = new byte[input.length];
     for (int i = 0; i < input.length; i++) {
       result[i] = (byte) input[i];

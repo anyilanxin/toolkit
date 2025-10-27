@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +22,7 @@ import java.util.Map;
 
 public class CollectionUtil {
 
-  public static <K, V> void addToMapOfLists(Map<K, List<V>> map, K key, V value) {
+    public static <K, V> void addToMapOfLists(final Map<K, List<V>> map, final K key, final V value) {
     List<V> list = map.get(key);
     if (list == null) {
       list = new ArrayList<>();

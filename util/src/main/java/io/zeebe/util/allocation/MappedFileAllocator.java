@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +27,13 @@ public class MappedFileAllocator implements BufferAllocator {
 
   private final File mappedFile;
 
-  public MappedFileAllocator(File mappedFile) {
+    public MappedFileAllocator(final File mappedFile) {
     super();
     this.mappedFile = mappedFile;
   }
 
   @Override
-  public AllocatedBuffer allocate(int capacity) {
+  public AllocatedBuffer allocate(final int capacity) {
     RandomAccessFile raf = null;
 
     try {
@@ -41,11 +42,11 @@ public class MappedFileAllocator implements BufferAllocator {
       final MappedByteBuffer mappedBuffer = raf.getChannel().map(MapMode.READ_WRITE, 0, capacity);
 
       return new AllocatedMappedFile(mappedBuffer, raf);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       if (raf != null) {
         try {
           raf.close();
-        } catch (IOException e1) {
+        } catch (final IOException e1) {
           // ignore silently
         }
       }

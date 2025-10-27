@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +16,12 @@
  */
 package io.zeebe.util.collection;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntListIteratorTest {
 

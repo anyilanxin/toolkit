@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
+ * Copyright © 2025 anyilanxin zxh(anyilanxin@aliyun.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +18,10 @@ package io.zeebe.util;
 
 public class ReflectUtil {
 
-  public static <T> T newInstance(Class<T> clazz) {
+    public static <T> T newInstance(final Class<T> clazz) {
     try {
       return clazz.newInstance();
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new RuntimeException("Could not instantiate class " + clazz.getName(), e);
     }
   }
